@@ -1,11 +1,15 @@
-
+import numpy as np
 import xgboost as xgb
 from ray import tune
 from ray.tune.suggest import ConcurrencyLimiter
 from ray.tune.schedulers import AsyncHyperBandScheduler
 from ray.tune.suggest.hyperopt import HyperOptSearch
+from sklearn.metrics import accuracy_score
 
 from data import get_data
+from custom.score import f2_score
+
+TARGET_METRIC = "f2_score"
 
 
 def train(config, data, use_tune=True):
@@ -17,26 +21,51 @@ def train(config, data, use_tune=True):
 
     # Train the classifier
     results = {}
-    xgb.train(
+    model = xgb.train(
         config, train_set, evals=[(test_set, "eval")], evals_result=results, verbose_eval=False
     )
+    preds = model.predict(test_set)
 
-    accuracy = 1.0 - results["eval"]["error"][-1]
+    # NOTE: transfer preds to labels
+    pred_labels = np.zeros(test_y.shape)
+    pred_labels[np.where(preds > 0.5)] = 1
+
+    metrics = {
+        "f2_score": f2_score(test_y, pred_labels),
+        "accuracy": accuracy_score(test_y, pred_labels),
+    }
     if use_tune:
-        tune.report(mean_accuracy=accuracy, done=True)
+        tune.report(**metrics, done=True)
 
-    return results
+    return metrics
+
+
+def get_search_space(debug=False):
+    shared = {
+        "objective": "binary:logistic",
+        "eval_metric": "logloss",
+    }
+
+    if debug:
+        return {
+            **shared,
+            "max_depth": 7,
+            "min_child_weight": 2,
+        }
+    else:
+        return {
+            **shared,
+            "objective": "binary:logistic",
+            "eval_metric": "logloss",
+            "max_depth": tune.randint(1, 9),
+            "min_child_weight": tune.choice([1, 2, 3]),
+            "subsample": tune.uniform(0.5, 1.0),
+            "eta": tune.loguniform(1e-4, 1e-1),
+        }
 
 
 def tune_xgboost():
-    search_space = {
-        "objective": "binary:logistic",
-        "eval_metric": "error",
-        "max_depth": tune.randint(1, 9),
-        "min_child_weight": tune.choice([1, 2, 3]),
-        "subsample": tune.uniform(0.5, 1.0),
-        "eta": tune.loguniform(1e-4, 1e-1),
-    }
+    search_space = get_search_space()
 
     algo = HyperOptSearch()
     algo = ConcurrencyLimiter(algo, max_concurrent=4)
@@ -47,12 +76,12 @@ def tune_xgboost():
 
     analysis = tune.run(
         tune.with_parameters(train, data=data),
-        metric="mean_accuracy",
-        mode="min",
+        metric=TARGET_METRIC,
+        mode="max",
         # You can add "gpu": 0.1 to allocate GPUs
         resources_per_trial={"cpu": 10},
         config=search_space,
-        num_samples=10,
+        num_samples=50,
         search_alg=algo,
         scheduler=scheduler,
     )
@@ -68,13 +97,7 @@ if __name__ == "__main__":
     args, _ = parser.parse_known_args()
 
     if args.debug:
-        config = {
-            # You can mix constants with search space objects.
-            "objective": "binary:logistic",
-            "eval_metric": "error",
-            "max_depth": 7,
-            "min_child_weight": 2,
-        }
+        config = get_search_space(True)
         data = get_data()
         analysis = train(config, data, use_tune=False)
         print(analysis)
