@@ -1,4 +1,3 @@
-import typing
 from collections import defaultdict
 
 import pandas as pd
@@ -26,7 +25,7 @@ def get_data(path: str, split_size: float=0.1):
     df = pd.read_csv(path)
     df = df.drop_duplicates()
 
-    sampled_df = sample_data(df)
+    sampled_df = down_sample(df)
 
     x = sampled_df[WHITE_LISTED_CLASSES]
     y = sampled_df[LABEL_CLASS]
@@ -40,7 +39,7 @@ def get_data(path: str, split_size: float=0.1):
 
     return train_test_split(x, y, test_size=split_size)
 
-def sample_data(df: pd.DataFrame) -> pd.DataFrame:
+def down_sample(df: pd.DataFrame) -> pd.DataFrame:
     sampler = RandomUnderSampler(sampling_strategy='not minority', random_state=1)
     df, _ = sampler.fit_resample(df, df[LABEL_CLASS])
     return df
