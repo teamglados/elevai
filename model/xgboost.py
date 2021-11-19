@@ -34,6 +34,7 @@ def get_search_space(debug=False):
             "min_child_weight": 2,
         }
     else:
+        # TODO what params to optimize?
         return {
             **shared,
             "objective": "binary:logistic",

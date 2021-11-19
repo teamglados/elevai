@@ -6,6 +6,7 @@ from ray.tune.suggest.hyperopt import HyperOptSearch
 
 
 from data import get_data, smoteenn, random_under_sampler
+from model import xgboost, random_forest, catboost, lightgbm
 
 TARGET_METRIC = "f2_score"
 
@@ -15,6 +16,11 @@ def get_model_funcs(model, debug=False):
         return xgboost.train, xgboost.get_search_space(debug)
     elif model == "randomforest":
         return random_forest.train, random_forest.get_search_space(debug)
+    elif model == "catboost":
+        return catboost.train, catboost.get_search_space(debug)
+    elif model == "lightgbm":
+        return lightgbm.train, lightgbm.get_search_space(debug)
+
     else:
         raise ValueError("Unknown model type!")
 
