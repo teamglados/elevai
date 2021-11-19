@@ -26,7 +26,7 @@ def debug_train(model, data):
     print(analysis)
 
 
-def tune_model(model, data, cpus, max_concurrent):
+def tune_model(model, data, cpus, max_concurrent, num_samples):
     algo = HyperOptSearch()
     algo = ConcurrencyLimiter(algo, max_concurrent=max_concurrent)
 
@@ -38,10 +38,9 @@ def tune_model(model, data, cpus, max_concurrent):
         tune.with_parameters(_train, data=data),
         metric=TARGET_METRIC,
         mode="max",
-        # You can add "gpu": 0.1 to allocate GPUs
         resources_per_trial={"cpu": cpus},
         config=_search_space,
-        num_samples=50,
+        num_samples=num_samples,
         search_alg=algo,
         scheduler=scheduler,
     )
@@ -56,6 +55,7 @@ def run(
     max_concurrent=4,
     data_path="data/train.csv",
     split_size=0.1,
+    num_samples=100,
 ):
     """
     Example command: python model.py --model=randomforest --debug
@@ -65,7 +65,7 @@ def run(
     if debug:
         debug_train(model, data)
     else:
-        analysis = tune_model(model, data, cpus, max_concurrent)
+        analysis = tune_model(model, data, cpus, max_concurrent, num_samples)
         print(analysis.best_config)
         print(analysis.best_result)
 
