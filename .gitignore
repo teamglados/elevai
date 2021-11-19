@@ -1,4 +1,6 @@
 /data
+catboost_info
+.ipynb_checkpoints
 .DS_Store
 *.pyc
 .mypy_cache/
