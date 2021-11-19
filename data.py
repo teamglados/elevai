@@ -22,7 +22,7 @@ WHITE_LISTED_CLASSES = [
 LABEL_CLASS = "feedback"
 
 
-def get_data(path: str = "data/train.csv", split_size: float=0.1):
+def get_data(path: str, split_size: float=0.1):
     df = pd.read_csv(path)
     df = df.drop_duplicates()
 
