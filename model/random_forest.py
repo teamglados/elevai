@@ -14,11 +14,12 @@ def train(config, data, use_tune=True):
 
 
 def get_search_space(debug=False):
-    shared = {"criterion": "entropy", "random_state": 0}
+    shared = {"random_state": 0}
 
     if debug:
         return {
             **shared,
+            "criterion": "entropy",
             "max_depth": 7,
             "n_estimators": 500,
             "min_samples_split": 3,
@@ -28,8 +29,10 @@ def get_search_space(debug=False):
     else:
         return {
             **shared,
-            "n_estimators": tune.randint(1, 1000),
+            "criterion": tune.choice(["entropy", "gini"]),
+            "n_estimators": tune.randint(1, 2000),
+            "max_features": tune.choice(["sqrt", "log2"]),
             "min_samples_split": tune.randint(2, 5),
-            "min_samples_leaf": tune.randint(1, 3),
-            "max_depth": tune.choice([1, 7, 15, None]),
+            "min_samples_leaf": tune.randint(1, 15),
+            "max_depth": tune.choice([3, 5, 8, 12, None]),
         }
