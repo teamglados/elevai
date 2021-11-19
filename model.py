@@ -1,86 +1,43 @@
+import fire
 import numpy as np
-import xgboost as xgb
 from ray import tune
 from ray.tune.suggest import ConcurrencyLimiter
 from ray.tune.schedulers import AsyncHyperBandScheduler
 from ray.tune.suggest.hyperopt import HyperOptSearch
-from sklearn.metrics import accuracy_score
+
 
 from data import get_data
-from custom.score import f2_score
+from model import xgboost
 
 TARGET_METRIC = "f2_score"
 
 
-def train(config, data, use_tune=True):
-    train_x, test_x, train_y, test_y = data
-
-    # Build input matrices for XGBoost
-    train_set = xgb.DMatrix(train_x, label=train_y)
-    test_set = xgb.DMatrix(test_x, label=test_y)
-
-    # Train the classifier
-    results = {}
-    model = xgb.train(
-        config, train_set, evals=[(test_set, "eval")], evals_result=results, verbose_eval=False
-    )
-    preds = model.predict(test_set)
-
-    # NOTE: transfer preds to labels
-    pred_labels = np.zeros(test_y.shape)
-    pred_labels[np.where(preds > 0.5)] = 1
-
-    metrics = {
-        "f2_score": f2_score(test_y, pred_labels),
-        "accuracy": accuracy_score(test_y, pred_labels),
-    }
-    if use_tune:
-        tune.report(**metrics, done=True)
-
-    return metrics
+def get_model_funcs(model, debug=False):
+    if model == "xgboost":
+        return xgboost.train, xgboost.get_search_space(debug)
 
 
-def get_search_space(debug=False):
-    shared = {
-        "objective": "binary:logistic",
-        "eval_metric": "logloss",
-    }
-
-    if debug:
-        return {
-            **shared,
-            "max_depth": 7,
-            "min_child_weight": 2,
-        }
-    else:
-        return {
-            **shared,
-            "objective": "binary:logistic",
-            "eval_metric": "logloss",
-            "max_depth": tune.randint(1, 9),
-            "min_child_weight": tune.choice([1, 2, 3]),
-            "subsample": tune.uniform(0.5, 1.0),
-            "eta": tune.loguniform(1e-4, 1e-1),
-        }
+def debug_train(model, data):
+    _train, _search_space = get_model_funcs(model, True)
+    analysis = _train(_search_space, data, use_tune=False)
+    print(analysis)
 
 
-def tune_xgboost():
-    search_space = get_search_space()
-
+def tune_model(model, data, cpus, max_concurrent):
     algo = HyperOptSearch()
-    algo = ConcurrencyLimiter(algo, max_concurrent=4)
+    algo = ConcurrencyLimiter(algo, max_concurrent=max_concurrent)
 
     scheduler = AsyncHyperBandScheduler()
 
-    data = get_data()
+    _train, _search_space = get_model_funcs(model)
 
     analysis = tune.run(
-        tune.with_parameters(train, data=data),
+        tune.with_parameters(_train, data=data),
         metric=TARGET_METRIC,
         mode="max",
         # You can add "gpu": 0.1 to allocate GPUs
-        resources_per_trial={"cpu": 10},
-        config=search_space,
+        resources_per_trial={"cpu": cpus},
+        config=_search_space,
         num_samples=50,
         search_alg=algo,
         scheduler=scheduler,
@@ -89,19 +46,17 @@ def tune_xgboost():
     return analysis
 
 
-if __name__ == "__main__":
-    import argparse
+def run(debug: bool = False, model="xgboost", cpus: int = 1, max_concurrent=4):
+    data = get_data()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--debug", default=None, action="store_true")
-    args, _ = parser.parse_known_args()
-
-    if args.debug:
-        config = get_search_space(True)
-        data = get_data()
-        analysis = train(config, data, use_tune=False)
-        print(analysis)
+    if debug:
+        debug_train(model, data)
     else:
-        analysis = tune_xgboost()
+        analysis = tune_model(model, data, cpus, max_concurrent)
         print(analysis.best_config)
         print(analysis.best_result)
+
+
+if __name__ == "__main__":
+    fire.Fire(run)
+
