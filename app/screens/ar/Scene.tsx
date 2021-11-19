@@ -5,11 +5,10 @@ import {
   ViroARScene,
   ViroText,
   ViroConstants,
-  ViroARSceneNavigator,
   ViroARPlaneSelector,
 } from '@viro-community/react-viro';
 
-const MainScene = () => {
+export default function MainScene() {
   const [selectedPlane, setSelectedPlane] = React.useState(null);
 
   function handleTrackingUpdated(state, reason) {
@@ -49,26 +48,13 @@ const MainScene = () => {
       </ViroARPlaneSelector>
     </ViroARScene>
   );
-};
-
-export default function App() {
-  return (
-    <ViroARSceneNavigator
-      autofocus={true}
-      initialScene={{ scene: MainScene }}
-      style={styles.container}
-    />
-  );
 }
 
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   text: {
     fontFamily: 'Arial',
     fontSize: 30,
-    color: '#ff0000',
+    color: '#ffffff',
     textAlignVertical: 'center',
     textAlign: 'center',
   },

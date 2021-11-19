@@ -1100,6 +1100,7 @@ ViroSceneNavigator is used to transition between multiple scenes. */
     position?: number[];
     rotation?: number[];
     text: string;
+    scale?: number[];
     rotationPivot?: number[];
     color?: any;
     extrusionDepth?: number;
@@ -2186,6 +2187,7 @@ ViroSceneNavigator is used to transition between multiple scenes. */
     shadowsEnabled?: boolean;
     multisamplingEnabled?: boolean;
     viroAppProps?: any;
+    style?: any;
   }
   export class ViroARSceneNavigator extends Component<ViroARSceneNavigatorProps> {
     public getRandomTag(): any;

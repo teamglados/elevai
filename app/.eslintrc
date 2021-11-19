@@ -1,0 +1,58 @@
+{
+  "root": true,
+  "extends": [
+    "@react-native-community",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:lodash/recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "lodash", "prettier"],
+  "env": {
+    "es6": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react-native/no-inline-styles": "off",
+    "no-var": "error",
+    "no-console": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
+    "semi": ["error", "always"],
+    "prefer-const": "error",
+    "prefer-arrow-callback": "error",
+    "@typescript-eslint/array-type": ["error", { "default": "array-simple" }],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/prefer-interface": "off",
+    "@typescript-eslint/ban-types": "off",
+    "lodash/import-scope": [2, "member"],
+    "lodash/prefer-lodash-method": "off",
+    "lodash/prefer-lodash-typecheck": "off",
+    "lodash/collection-ordering": "off",
+    "lodash/prop-shorthand": "off",
+    "lodash/prefer-constant": "off",
+    "eslint-comments/no-unlimited-disable": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          ["builtin", "external", "internal"],
+          ["parent", "sibling", "index"]
+        ]
+      }
+    ]
+  }
+}
