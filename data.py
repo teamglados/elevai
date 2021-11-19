@@ -2,6 +2,7 @@ from collections import defaultdict
 
 import pandas as pd
 from imblearn.under_sampling import RandomUnderSampler
+from imblearn.combine import SMOTEENN
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
@@ -25,21 +26,22 @@ def get_data(path: str, split_size: float=0.1):
     df = pd.read_csv(path)
     df = df.drop_duplicates()
 
-    sampled_df = down_sample(df)
-
-    x = sampled_df[WHITE_LISTED_CLASSES]
-    y = sampled_df[LABEL_CLASS]
-
+    x = df[WHITE_LISTED_CLASSES]
+    y = df[LABEL_CLASS]
 
     label_encoder = defaultdict(LabelEncoder)
 
     # TODO do we have all labels in the dataset after downsampling?
     x = x.apply(lambda feature: label_encoder[feature.name].fit_transform(feature))
 
-
     return train_test_split(x, y, test_size=split_size)
 
-def down_sample(df: pd.DataFrame) -> pd.DataFrame:
+def random_under_sampler(x, y):
     sampler = RandomUnderSampler(sampling_strategy='not minority', random_state=1)
-    df, _ = sampler.fit_resample(df, df[LABEL_CLASS])
-    return df
+    return sampler.fit_resample(x, y)
+
+
+def smoteenn(x, y):
+    over_sampler = SMOTEENN(random_state=1)
+    return over_sampler.fit_resample(x, y)
+
