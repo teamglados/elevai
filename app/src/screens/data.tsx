@@ -1,5 +1,5 @@
 import { sub } from 'date-fns';
-import { clamp, range } from 'lodash';
+import { clamp, range, sample, sampleSize } from 'lodash';
 import React from 'react';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,6 +34,12 @@ export type MaintenanceEvent = {
   id: number;
   date: Date;
   status: 'Completed' | 'Irrelevant';
+  flaggedMetrics: string[];
+  technician: {
+    avatar: any;
+    name: string;
+    phone: string;
+  };
 };
 
 export const incidents: Incident[] = [
@@ -135,8 +141,23 @@ export const features: Feature[] = [
   },
 ];
 
+const avatar1 = require('../assets/avatar1.jpg');
+const avatar2 = require('../assets/avatar2.jpg');
+const avatar3 = require('../assets/avatar3.jpg');
+const avatars = [avatar1, avatar2, avatar3];
+const metrics = ['Metric 1', 'Metric 2', 'Metric 3'];
+
 export const maintenanceHistory: MaintenanceEvent[] = range(5).map((i) => ({
   id: i,
   date: sub(new Date(), { weeks: i + 1 }),
   status: Math.random() > 0.5 ? 'Completed' : 'Irrelevant',
+  flaggedMetrics:
+    Math.random() > 0.5
+      ? (sampleSize(metrics, 2) as string[])
+      : ([sample(metrics)] as string[]),
+  technician: {
+    avatar: sample(avatars),
+    name: 'John Doe',
+    phone: '+1 (555) 555-5555',
+  },
 }));

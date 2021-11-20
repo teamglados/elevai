@@ -7,7 +7,7 @@ import { Text, Stack, CollapseSection, Spacer } from '../../components';
 import { styled } from '../../styles/styled';
 import LineChart from './LineChart';
 import IncidentFeatures from './IncidentFeatures';
-import { format } from 'date-fns';
+import MaintentenanceEvent from './MaintenanceEvent';
 
 type Props = {
   data: Incident;
@@ -50,22 +50,7 @@ export default function IncidentDetails({ data }: Props) {
               <Text variant="bodySmall">{data.location}</Text>
 
               <CollapseSection title="Maintenance history" icon="history">
-                <Stack axis="y" space="2">
-                  {maintenanceHistory.map((event) => (
-                    <Stack
-                      key={event.id}
-                      axis="x"
-                      space="2"
-                      align="center"
-                      justify="between"
-                    >
-                      <Text variant="body">Event</Text>
-                      <Text variant="bodySmall" color="textMuted">
-                        {format(event.date, 'MM.dd.yyyy')}
-                      </Text>
-                    </Stack>
-                  ))}
-                </Stack>
+                <Text variant="body">TODO</Text>
               </CollapseSection>
 
               <Text variant="bodySmall">More stuff here</Text>
@@ -74,7 +59,7 @@ export default function IncidentDetails({ data }: Props) {
         </Content>
 
         <Content>
-          <Headline variant="headline">Something</Headline>
+          <Headline variant="headline">Maintenance history</Headline>
         </Content>
 
         <Spacer axis="y" space="2" />
@@ -82,8 +67,13 @@ export default function IncidentDetails({ data }: Props) {
         <Content>
           <Card>
             <Stack axis="y" space="3">
-              <Text variant="body">Stuff</Text>
-              <Text variant="bodySmall">Something</Text>
+              {maintenanceHistory.map((event, index) => (
+                <MaintentenanceEventWrapper
+                  last={index === maintenanceHistory.length - 1 ? 'y' : 'n'}
+                >
+                  <MaintentenanceEvent key={event.id} event={event} />
+                </MaintentenanceEventWrapper>
+              ))}
             </Stack>
           </Card>
         </Content>
@@ -103,6 +93,8 @@ export default function IncidentDetails({ data }: Props) {
           </Card>
         </Content>
 
+        <LineChart />
+        <LineChart />
         <LineChart />
       </Stack>
     </Wrapper>
@@ -142,4 +134,20 @@ const IconWrapper = styled('View', {
   borderRadius: '$md',
   alignSelf: 'flex-start',
   backgroundColor: '$surfaceClear',
+});
+
+const MaintentenanceEventWrapper = styled('View', {
+  borderBottomColor: '$surfaceDistinct',
+  paddingBottom: '$3',
+
+  variants: {
+    last: {
+      y: {
+        borderBottomWidth: 0,
+      },
+      n: {
+        borderBottomWidth: 1,
+      },
+    },
+  },
 });
