@@ -7,9 +7,7 @@ export type TypographyVariant =
   | 'bodySmall'
   | 'bodyExtraSmall'
   | 'headline'
-  | 'title1'
-  | 'title2'
-  | 'title3';
+  | 'subtitle';
 
 type TypographyVariantVar = `$${TypographyVariant}`;
 
@@ -32,17 +30,9 @@ const typographyVariants: {
     fontSize: 18,
     fontWeight: '700',
   },
-  $title1: {
-    fontSize: 64,
-    fontWeight: '700',
-  },
-  $title2: {
-    fontSize: 48,
-    fontWeight: '500',
-  },
-  $title3: {
-    fontSize: 26,
-    fontWeight: '700',
+  $subtitle: {
+    fontSize: 14,
+    fontWeight: '600',
   },
 };
 
@@ -68,20 +58,10 @@ export const typographyARVariants: {
     fontSize: 18 * FONT_SIZE_FACTOR,
     fontWeight: '700',
   },
-  title1: {
+  subtitle: {
     fontFamily: 'San Fransisco',
-    fontSize: 64 * FONT_SIZE_FACTOR,
-    fontWeight: '700',
-  },
-  title2: {
-    fontFamily: 'San Fransisco',
-    fontSize: 48 * FONT_SIZE_FACTOR,
-    fontWeight: '500',
-  },
-  title3: {
-    fontFamily: 'San Fransisco',
-    fontSize: 26 * FONT_SIZE_FACTOR,
-    fontWeight: '700',
+    fontSize: 14 * FONT_SIZE_FACTOR,
+    fontWeight: '600',
   },
 };
 

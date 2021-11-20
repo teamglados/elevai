@@ -1,10 +1,11 @@
 import React from 'react';
 import FeIcon from 'react-native-vector-icons/Feather';
+import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
-import { Incident, maintenanceHistory } from '../data';
+import { Incident, maintenanceHistory, metrics } from '../data';
 import { Text, Stack, CollapseSection, Spacer } from '../../components';
-import { styled } from '../../styles/styled';
+import { styled, useTheme } from '../../styles/styled';
 import LineChart from './LineChart';
 import IncidentFeatures from './IncidentFeatures';
 import MaintentenanceEvent from './MaintenanceEvent';
@@ -15,6 +16,7 @@ type Props = {
 
 export default function IncidentDetails({ data }: Props) {
   const navigation: any = useNavigation();
+  const theme = useTheme();
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -79,23 +81,31 @@ export default function IncidentDetails({ data }: Props) {
         </Content>
 
         <Content>
-          <Headline variant="headline">Another</Headline>
+          <Headline variant="headline">Metrics</Headline>
         </Content>
 
         <Spacer axis="y" space="2" />
 
-        <Content>
-          <Card>
-            <Stack axis="y" space="3">
-              <Text variant="body">Stuff</Text>
-              <Text variant="bodySmall">Something</Text>
-            </Stack>
-          </Card>
-        </Content>
+        <Stack axis="y" space="2">
+          {metrics.map((metric) => (
+            <Content key={metric}>
+              <Card>
+                <Stack axis="x" space="2" align="center">
+                  <McIcon
+                    name="chart-timeline-variant"
+                    size={16}
+                    color={theme.colors.text.value}
+                  />
+                  <Text variant="subtitle">{metric}</Text>
+                </Stack>
 
-        <LineChart />
-        <LineChart />
-        <LineChart />
+                <CardChart>
+                  <LineChart />
+                </CardChart>
+              </Card>
+            </Content>
+          ))}
+        </Stack>
       </Stack>
     </Wrapper>
   );
@@ -114,6 +124,11 @@ const Card = styled('View', {
   padding: '$3',
   backgroundColor: '$surface',
   borderRadius: '$md',
+});
+
+const CardChart = styled('View', {
+  marginHorizontal: '-$3',
+  marginBottom: '-$3',
 });
 
 const Headline = styled(Text, {

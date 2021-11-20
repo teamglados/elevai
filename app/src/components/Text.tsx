@@ -22,9 +22,7 @@ export const Text = styled('Text', {
       bodySmall: { typography: '$bodySmall' },
       bodyExtraSmall: { typography: '$bodyExtraSmall' },
       headline: { typography: '$headline' },
-      title1: { typography: '$title1' },
-      title2: { typography: '$title2' },
-      title3: { typography: '$title3' },
+      subtitle: { typography: '$subtitle' },
     },
     align: {
       left: { textAlign: 'left' },

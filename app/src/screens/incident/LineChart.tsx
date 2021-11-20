@@ -13,7 +13,7 @@ const MAX_Y = 240;
 function LineChart() {
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
-  const width = windowWidth;
+  const width = windowWidth - 16;
   const height = MAX_Y;
 
   const { line, threshold } = React.useMemo(() => {
@@ -49,7 +49,7 @@ function LineChart() {
   }, []);
 
   return (
-    <Svg width={width} height={height} style={{ alignSelf: 'flex-end' }}>
+    <Svg width={width} height={height}>
       <Defs>
         <LinearGradient
           id="gradient"

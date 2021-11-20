@@ -145,7 +145,7 @@ const avatar1 = require('../assets/avatar1.jpg');
 const avatar2 = require('../assets/avatar2.jpg');
 const avatar3 = require('../assets/avatar3.jpg');
 const avatars = [avatar1, avatar2, avatar3];
-const metrics = ['Metric 1', 'Metric 2', 'Metric 3'];
+export const metrics = ['Metric 1', 'Metric 2', 'Metric 3'];
 
 export const maintenanceHistory: MaintenanceEvent[] = range(5).map((i) => ({
   id: i,
