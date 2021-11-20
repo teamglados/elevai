@@ -45,4 +45,5 @@ def get_search_space(debug=False):
             "lambda": tune.uniform(1, 10),
             "alpha": tune.uniform(0, 1),
             "eta": tune.loguniform(1e-4, 1),
+            "scale_pos_weight": tune.uniform(0, 1), # https://xgboost.readthedocs.io/en/latest/parameter.html
         }
