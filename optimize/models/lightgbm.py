@@ -3,13 +3,13 @@ from ray import tune
 
 from optimize.models import metrics
 
-def train(config, data, use_tune=True):
-    train_x, test_x, train_y, test_y = data
+def train(config, data):
+    train_x, train_y, test_x, test_y = data
     lgb = LGBMClassifier(**config)
     lgb.fit(train_x, train_y)
     preds = lgb.predict(test_x)
 
-    return metrics(test_y, preds, use_tune)
+    return metrics(test_y, preds)
 
 def get_search_space(debug=False):
     shared = {}

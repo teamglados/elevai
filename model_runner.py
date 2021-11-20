@@ -1,3 +1,4 @@
+import fire
 import pandas as pd
 from ray import tune
 from ray.tune.suggest import ConcurrencyLimiter
@@ -5,14 +6,16 @@ from ray.tune.schedulers import AsyncHyperBandScheduler
 from ray.tune.suggest.hyperopt import HyperOptSearch
 from sklearn.model_selection import train_test_split, KFold
 
-from optimize.models import conver_probs_to_label
-from optimize.models import xgboost, random_forest, catboost, lightgbm
-from optimize.data import get_data, smoteenn_sampler, random_under_sampler, get_test_data
-from utils.logger import get_logger
+
+from data import get_data, smoteenn, random_under_sampler, get_test_data
+from model import xgboost, random_forest, catboost, lightgbm
+from utils import get_logger
+from model import conver_probs_to_label
 
 TARGET_METRIC = "f2_score"
 TARGET_METRIC_MODE = "max"
 LOGGER = get_logger(__name__)
+
 
 def get_model_funcs(model, debug=False):
     if model == "xgboost":
@@ -27,10 +30,12 @@ def get_model_funcs(model, debug=False):
     else:
         raise ValueError("Unknown model type!")
 
+
 def _single_train(train_f, config, data):
     analysis = train_f(config, data)
     LOGGER.info(analysis)
     return config
+
 
 def single_train(model, data, config=None):
     _train, _search_space = get_model_funcs(model, True)
@@ -39,9 +44,9 @@ def single_train(model, data, config=None):
         _search_space = config
     return _single_train(train_f, _search_space, data)
 
+
 def train(train_f, use_tune):
     def _train(config, data):
-        nonlocal use_tune
         metrics_items = []
         for _d in data:
             output = train_f(config, _d)
@@ -55,6 +60,7 @@ def train(train_f, use_tune):
         return _metrics
 
     return _train
+
 
 def tune_model(model, data, max_concurrent, num_samples):
     algo = HyperOptSearch()
@@ -77,15 +83,17 @@ def tune_model(model, data, max_concurrent, num_samples):
 
     return analysis
 
+
 def sample_data(x, y, sampler):
     if sampler == "smothe":
-        return smoteenn_sampler(x, y)
+        return smoteenn(x, y)
     elif sampler == "randomunder":
         return random_under_sampler(x, y)
     elif sampler == "nosampler":
         return x, y
     else:
         raise ValueError("Unknown sampler type!")
+
 
 def get_kfold_datasets(x, y, n, train_sampler, test_sampler):
     kf = KFold(n_splits=n, shuffle=True, random_state=1)
@@ -99,6 +107,7 @@ def get_kfold_datasets(x, y, n, train_sampler, test_sampler):
 
     return data
 
+
 def run(
     debug: bool = False,
     model="xgboost",
@@ -108,11 +117,12 @@ def run(
     data_path="data/train.csv",
     test_data_path="data/test.csv",
     num_samples=100,
-    kfold_n=5):
+    kfold_n=5,
+):
     """
-    Example command: python -m optimize --model=xgboost --kfold_n=5
+    Example command: python model_runner.py --model=xgboost --kfold_n=5
 
-    Example debug command: python -m optimize --model=xgboost --kfold_n=5 --debug
+    Example debug command: python model_runner.py --model=xgboost --kfold_n=5 --debug
     """
     x, y = get_data(data_path)
 
@@ -147,8 +157,12 @@ def run(
     pdb.set_trace()
 
     # TODO test that this stores the right values. Split know data and use that
-    # one option to test: python -m optimize --model=xgboost --kfold_n=5 --debug --test_data_path="data/train.csv"
+    # one option to test: python model_runner.py --model=xgboost --kfold_n=5 --debug --test_data_path="data/train.csv"
     test_data[["case_id", "action_recommendation_id", "feedback"]].to_csv(
         "submission.csv", index=False
     )
+
+
+if __name__ == "__main__":
+    fire.Fire(run)
 
