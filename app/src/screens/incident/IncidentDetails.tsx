@@ -131,9 +131,10 @@ export default function IncidentDetails({ data }: Props) {
             <Stack axis="y" space="3">
               {maintenanceHistory.map((event, index) => (
                 <MaintentenanceEventWrapper
+                  key={event.id}
                   last={index === maintenanceHistory.length - 1 ? 'y' : 'n'}
                 >
-                  <MaintentenanceEvent key={event.id} event={event} />
+                  <MaintentenanceEvent event={event} />
                 </MaintentenanceEventWrapper>
               ))}
             </Stack>

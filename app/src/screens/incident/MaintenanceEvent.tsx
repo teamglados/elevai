@@ -102,7 +102,7 @@ export default function MaintentenanceEvent({ event }: Props) {
                 </Text>
 
                 {event.flaggedMetrics.map((metric) => (
-                  <FlaggedMetric>
+                  <FlaggedMetric key={metric}>
                     <Stack axis="x" space="1" align="center">
                       <McIcon
                         name="chart-timeline-variant"
