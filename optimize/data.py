@@ -1,13 +1,13 @@
-from collections import defaultdict
-
 import pandas as pd
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.combine import SMOTEENN
+
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
+from collections import defaultdict
 
-WHITE_LISTED_CLASSES = [
+FEATURE_NAMES = [
     'action_recommendation_id',
     'action_recommendation_type',
     'action_recommendation_category',
@@ -18,16 +18,14 @@ WHITE_LISTED_CLASSES = [
     'speed_category',
     'usage_type',
 ]
-
-LABEL_CLASS = "feedback"
-
+LABEL_NAME = "feedback"
 
 def get_data(path: str, split_size: float=0.1):
     df = pd.read_csv(path)
     df = df.drop_duplicates()
 
-    x = df[WHITE_LISTED_CLASSES]
-    y = df[LABEL_CLASS]
+    x = df[FEATURE_NAMES]
+    y = df[LABEL_NAME]
 
     label_encoder = defaultdict(LabelEncoder)
 
@@ -40,8 +38,6 @@ def random_under_sampler(x, y):
     sampler = RandomUnderSampler(sampling_strategy='not minority', random_state=1)
     return sampler.fit_resample(x, y)
 
-
 def smoteenn(x, y):
     over_sampler = SMOTEENN(random_state=1)
     return over_sampler.fit_resample(x, y)
-

@@ -1,8 +1,7 @@
-from ray import tune
 from catboost import CatBoostClassifier
+from ray import tune
 
-from model import metrics
-
+from optimize.models import metrics
 
 def train(config, data, use_tune=True):
     train_x, test_x, train_y, test_y = data
@@ -11,7 +10,6 @@ def train(config, data, use_tune=True):
     preds = cat.predict(test_x)
 
     return metrics(test_y, preds, use_tune)
-
 
 def get_search_space(debug=False):
     shared = {}
