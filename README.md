@@ -2,6 +2,8 @@
 
 Eleveting predictive maintenance by combining collective domain expert knowledge and artificial intelligence.
 
+<all app screens>
+
 ## Introduction
 
 Kone moves over 1 billion people per day. Having any friction in this people flow is extremely costly. Predicting the need for maintenance and preventing unexpected equipment failures is key for Kone's high quality brand.
@@ -63,3 +65,12 @@ In our solution we ended up solving the problem in two ways:
 Check out how our app allows the technician to make the correct decision on maintenance task.
 
 
+1. First view lists the maintance events categorized by the reliability: events with uncertantly require actions from the technician before the visit
+2. To help techication make the right decision the event view shows maintenance history and people who where involved with the last maintancen events. For further analysis the technician is able to see the underlying cencor data. This data is sorted based on the relevance from the previous insidents that had overlapping features.
+3. After maintenance visit technician marks the data sources that were important to find out the underlying problem. These findings are shared between all technicians globally which ensures better knowledge sharing. This data is also important for the personel which design algorithms that use the data.
+4. As a final thing we want to ensure ability to inspect the equipment remote as much as possible. AR allows the technician to visualize the object for remote inspection.
+
+
+Acknowledgment
+
+- data plots
