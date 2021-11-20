@@ -15,7 +15,10 @@ export default function IncidentScreen({ route, navigation }: any) {
   }, [navigation]);
 
   return (
-    <Wrapper contentContainerStyle={{ paddingBottom: insets.bottom }}>
+    <Wrapper
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
+      showsVerticalScrollIndicator={false}
+    >
       <IncidentDetails data={incident} />
     </Wrapper>
   );

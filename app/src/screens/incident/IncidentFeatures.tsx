@@ -104,11 +104,13 @@ const Wrapper = styled('View', {
 const NumericFeatures = styled('View', {
   flex: 1,
   justifyContent: 'flex-end',
+  paddingLeft: '$2',
 });
 
 const CategoryFeatures = styled('View', {
   flex: 1,
-  paddingHorizontal: '$3',
+  paddingLeft: '$3',
+  paddingRight: '$2',
 });
 
 const FeatureIconWrapper = styled('View', {

@@ -1,15 +1,26 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { ViroARSceneNavigator } from '@viro-community/react-viro';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import { styled } from '../../styles/styled';
 import { Text } from '../../components';
-import { setupImageTargets } from './utils';
+import { setupAR } from './utils';
 import { useARStore } from './state';
 import Scene from './Scene';
 
-export default function ARScreen() {
+export default function ARScreen({ navigation }: { navigation: any }) {
   const anchor = useARStore((state) => state.anchor);
+  const setAnchor = useARStore((state) => state.setAnchor);
+
+  function goBack() {
+    navigation.goBack();
+    setAnchor(null);
+  }
+
+  React.useEffect(() => {
+    setupAR();
+  }, []);
 
   return (
     <Wrapper>
@@ -26,6 +37,10 @@ export default function ARScreen() {
           </Badge>
         </BadgeWrapper>
       )}
+
+      <BackButton onPress={goBack}>
+        <AntIcon name="back" size={24} color="#fff" />
+      </BackButton>
     </Wrapper>
   );
 }
@@ -48,10 +63,17 @@ const Badge = styled('View', {
   borderRadius: '$full',
 });
 
+const BackButton = styled('TouchableOpacity', {
+  position: 'absolute',
+  top: 40,
+  left: 16,
+  backgroundColor: '$overlay',
+  borderRadius: '$md',
+  padding: '$3',
+});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 });
-
-setupImageTargets();

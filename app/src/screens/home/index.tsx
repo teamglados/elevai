@@ -28,7 +28,11 @@ export default function HomeScreen() {
       <SectionList
         sections={sections}
         keyExtractor={(item) => String(item.id)}
-        contentContainerStyle={{ paddingBottom: insets.bottom, paddingTop: 12 }}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom,
+          paddingTop: 12,
+          paddingHorizontal: 8,
+        }}
         renderItem={({ item, index, section }) => (
           <SectionItem last={index === section.data.length - 1 ? 'y' : 'n'}>
             <IncidentCard data={item} />

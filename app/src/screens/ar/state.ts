@@ -3,10 +3,10 @@ import { Anchor } from '../../../types';
 
 type ARState = {
   anchor: Anchor | null;
-  setAnchor: (anchor: Anchor) => void;
+  setAnchor: (anchor: Anchor | null) => void;
 };
 
 export const useARStore = create<ARState>((set) => ({
   anchor: null,
-  setAnchor: (anchor: Anchor) => set({ anchor }),
+  setAnchor: (anchor) => set({ anchor }),
 }));
