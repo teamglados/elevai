@@ -16,6 +16,7 @@ const { styled, css, theme, createTheme, useTheme, ThemeProvider, config } =
         chartPositive: '#003758',
         chartPositiveLight: '#90d4ff',
         text: '#ffffff',
+        textMuted: '#666666',
         textInvert: '#000000',
         background: '#000000',
         overlay: 'rgba(0, 0, 0, 0.5)',

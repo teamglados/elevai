@@ -29,5 +29,8 @@ export function useScreenOptions() {
     headerTitleStyle: {
       color: theme.colors.text.value,
     },
+    // headerBackTitleStyle: {
+    //   color: theme.colors.primary.value,
+    // },
   };
 }
