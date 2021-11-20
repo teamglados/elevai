@@ -7,11 +7,13 @@ from ray.tune.suggest.hyperopt import HyperOptSearch
 from sklearn.model_selection import train_test_split, KFold
 
 
-from data import get_data, smoteenn, random_under_sampler
+from data import get_data, smoteenn, random_under_sampler, get_test_data
 from model import xgboost, random_forest, catboost, lightgbm
 from utils import get_logger
+from model import conver_probs_to_label
 
 TARGET_METRIC = "f2_score"
+TARGET_METRIC_MODE = "max"
 LOGGER = get_logger(__name__)
 
 
@@ -71,7 +73,7 @@ def tune_model(model, data, max_concurrent, num_samples):
     analysis = tune.run(
         tune.with_parameters(train(train_f=_train, use_tune=True), data=data),
         metric=TARGET_METRIC,
-        mode="max",
+        mode=TARGET_METRIC_MODE,
         resources_per_trial={"cpu": 1},
         config=_search_space,
         num_samples=num_samples,
@@ -113,6 +115,7 @@ def run(
     test_sampler="randomunder",
     max_concurrent=4,
     data_path="data/train.csv",
+    test_data_path="data/test.csv",
     num_samples=100,
     kfold_n=5,
 ):
@@ -136,8 +139,21 @@ def run(
         best_config = analysis.best_config
         LOGGER.info(analysis.best_result)
 
-    data = get_kfold_datasets(x, y, kfold_n, "nosampler", "nosampler")
-    single_train(model, data, best_config)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=3)
+    # keep same order
+    data = x_train, y_train, x_test, y_test
+    # is_test doesn't return labels
+    test_data, case_id = get_test_data(test_data_path)
+    predictions = xgboost.predict(best_config, data, test_data)
+    pred_labels = conver_probs_to_label(predictions)
+
+    test_data["feedback"] = pred_labels
+    test_data["case_id"] = case_id
+
+    # TODO test that this stores the right values. Split know data and use that
+    test_data[["case_id", "action_recommendation_id", "feedback"]].to_csv(
+        "submission.csv", index=False
+    )
 
 
 if __name__ == "__main__":

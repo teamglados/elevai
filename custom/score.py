@@ -11,7 +11,10 @@ def fb_score(beta, y_true, y_pred):
     '''
     p = precision_score(y_true, y_pred)
     r = recall_score(y_true, y_pred)
-    score = (1 + beta**2) * (p * r) / ((beta**2 * p) + r)
+    try:
+        score = (1 + beta**2) * (p * r) / ((beta**2 * p) + r)
+    except:
+        score = 0
     return score
 
 def f2_score(y_true, y_pred):
