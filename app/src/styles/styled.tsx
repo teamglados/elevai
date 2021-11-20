@@ -8,21 +8,12 @@ const { styled, css, theme, createTheme, useTheme, ThemeProvider, config } =
   createStitches({
     theme: {
       colors: {
-        // Palette
-        blue100: '#ab9cf7',
-        blue500: '#301b96',
-        blue900: '#0D0630',
-        black: '#222',
-        white: '#fff',
-
-        primary: '$blue500',
-        primaryDark: '$blue900',
-        primaryLight: '$blue100',
-        secondary: '#8BBEB2',
-        secondaryDark: '#384d48',
-        secondaryLight: '#d9fff6',
-        background: '$white',
-        text: '$black',
+        primary: '#0071b9',
+        primaryLight: '#90d4ff',
+        text: '#ffffff',
+        background: '#000000',
+        overlay: 'rgba(0, 0, 0, 0.5)',
+        surface: 'rgba(150, 150, 150, 0.22)',
       },
       space: {
         1: 4,
@@ -41,7 +32,7 @@ const { styled, css, theme, createTheme, useTheme, ThemeProvider, config } =
       radii: {
         sm: 4,
         md: 8,
-        lg: 24,
+        lg: 16,
         full: 999,
       },
     },
@@ -55,5 +46,6 @@ const { styled, css, theme, createTheme, useTheme, ThemeProvider, config } =
   });
 
 export type CSS = Stitches.CSS<typeof config>;
+export type Theme = typeof theme;
 
 export { styled, css, createTheme, theme, useTheme, ThemeProvider };

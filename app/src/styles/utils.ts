@@ -1,8 +1,14 @@
 import { CSSProperties } from 'react';
-import { StyleSheet } from 'react-native';
+import { PixelRatio, StyleSheet } from 'react-native';
 import type * as Stitches from 'stitches-native';
 
-type TypographyVariant = 'body' | 'bodySmall' | 'title1' | 'title2' | 'title3';
+export type TypographyVariant =
+  | 'body'
+  | 'bodySmall'
+  | 'bodyExtraSmall'
+  | 'title1'
+  | 'title2'
+  | 'title3';
 
 type TypographyVariantVar = `$${TypographyVariant}`;
 
@@ -10,37 +16,58 @@ const typographyVariants: {
   [variant in TypographyVariantVar]: CSSProperties;
 } = {
   $body: {
-    fontFamily: '"Open Sans", sans-serif',
-    lineHeight: 1.5,
-    fontSize: 18,
-    fontWeight: 400,
+    fontSize: 16,
+    fontWeight: '500',
   },
   $bodySmall: {
-    fontFamily: '"Open Sans", sans-serif',
-    lineHeight: 1.4,
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: '400',
+  },
+  $bodyExtraSmall: {
+    fontSize: 10,
+    fontWeight: '500',
   },
   $title1: {
-    fontFamily: '"Playfair Display", serif',
-    lineHeight: 1,
     fontSize: 64,
-    fontWeight: 700,
-    color: '$tertiary',
+    fontWeight: 'bold',
   },
   $title2: {
-    fontFamily: '"Playfair Display", serif',
-    lineHeight: 1,
     fontSize: 48,
-    fontWeight: 400,
-    color: '$tertiary',
   },
   $title3: {
-    fontFamily: '"Playfair Display", serif',
-    lineHeight: 1,
     fontSize: 26,
-    fontWeight: 500,
-    color: '$primary',
+  },
+};
+
+export const FONT_SIZE_FACTOR = PixelRatio.get();
+
+export const typographyARVariants: {
+  [variant in TypographyVariant]: CSSProperties;
+} = {
+  body: {
+    fontFamily: 'San Fransisco',
+    fontSize: 16 * FONT_SIZE_FACTOR,
+  },
+  bodySmall: {
+    fontFamily: 'San Fransisco',
+    fontSize: 14 * FONT_SIZE_FACTOR,
+  },
+  bodyExtraSmall: {
+    fontFamily: 'San Fransisco',
+    fontSize: 8 * FONT_SIZE_FACTOR,
+  },
+  title1: {
+    fontFamily: 'San Fransisco',
+    fontSize: 64 * FONT_SIZE_FACTOR,
+    fontWeight: 'bold',
+  },
+  title2: {
+    fontFamily: 'San Fransisco',
+    fontSize: 48 * FONT_SIZE_FACTOR,
+  },
+  title3: {
+    fontFamily: 'San Fransisco',
+    fontSize: 26 * FONT_SIZE_FACTOR,
   },
 };
 

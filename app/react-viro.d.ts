@@ -1099,6 +1099,7 @@ ViroSceneNavigator is used to transition between multiple scenes. */
   interface ViroTextProps {
     position?: number[];
     rotation?: number[];
+    textAlign?: 'left' | 'right' | 'center';
     text: string;
     scale?: number[];
     rotationPivot?: number[];
