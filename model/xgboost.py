@@ -24,12 +24,12 @@ def train(config, data):
 def get_search_space(debug=False):
     shared = {
         "objective": "binary:logistic",
-        "eval_metric": "logloss",
     }
 
     if debug:
         return {
             **shared,
+            "eval_metric": "aucpr",
             "max_depth": 7,
             "min_child_weight": 2,
         }
@@ -37,10 +37,12 @@ def get_search_space(debug=False):
         # TODO what params to optimize?
         return {
             **shared,
-            "objective": "binary:logistic",
-            "eval_metric": "logloss",
-            "max_depth": tune.randint(1, 9),
+            "eval_metric": tune.choice(["aucpr", "error", "auc", "logloss"]),
+            "max_depth": tune.randint(0, 30),
             "min_child_weight": tune.choice([1, 2, 3]),
             "subsample": tune.uniform(0.5, 1.0),
-            "eta": tune.loguniform(1e-4, 1e-1),
+            "gamma": tune.uniform(0, 100),
+            "lambda": tune.uniform(1, 10),
+            "alpha": tune.uniform(0, 1),
+            "eta": tune.loguniform(1e-4, 1),
         }

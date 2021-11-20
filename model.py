@@ -29,11 +29,18 @@ def get_model_funcs(model, debug=False):
         raise ValueError("Unknown model type!")
 
 
-def debug_train(model, data):
+def _single_train(train_f, config, data):
+    analysis = train_f(config, data)
+    LOGGER.info(analysis)
+    return config
+
+
+def single_train(model, data, config=None):
     _train, _search_space = get_model_funcs(model, True)
     train_f = train(train_f=_train, use_tune=False)
-    analysis = train_f(_search_space, data)
-    LOGGER.info(analysis)
+    if config:
+        _search_space = config
+    return _single_train(train_f, _search_space, data)
 
 
 def train(train_f, use_tune):
@@ -80,6 +87,8 @@ def sample_data(x, y, sampler):
         return smoteenn(x, y)
     elif sampler == "randomunder":
         return random_under_sampler(x, y)
+    elif sampler == "nosampler":
+        return x, y
     else:
         raise ValueError("Unknown sampler type!")
 
@@ -121,11 +130,14 @@ def run(
         ]
 
     if debug:
-        debug_train(model, data)
+        best_config = single_train(model, data)
     else:
         analysis = tune_model(model, data, max_concurrent, num_samples)
-        print(analysis.best_config)
-        print(analysis.best_result)
+        best_config = analysis.best_config
+        LOGGER.info(analysis.best_result)
+
+    data = get_kfold_datasets(x, y, kfold_n, "nosampler", "nosampler")
+    single_train(model, data, best_config)
 
 
 if __name__ == "__main__":
