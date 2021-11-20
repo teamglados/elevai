@@ -4,40 +4,39 @@ import pandas as pd
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.combine import SMOTEENN
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
 
 
-WHITE_LISTED_CLASSES = [
-    'action_recommendation_id',
-    'action_recommendation_type',
-    'action_recommendation_category',
-    'equipment_area',
-    'equipment_category',
-    'floors_category',
-    'load_category',
-    'speed_category',
-    'usage_type',
+
+CATEGORICAL_FEATURES = [
+    "action_recommendation_id",
+    "action_recommendation_type",
+    "action_recommendation_category",
+    "equipment_area",
+    "equipment_category",
+    "usage_type",
 ]
+
+NUMBERIC_FEATURES = ["speed_category", "load_category", "floors_category"]
 
 LABEL_CLASS = "feedback"
 
 
-def get_data(path: str, split_size: float=0.1):
+def get_data(path: str, split_size: float = 0.1):
     df = pd.read_csv(path)
     df = df.drop_duplicates()
 
-    x = df[WHITE_LISTED_CLASSES]
+    x = df[CATEGORICAL_FEATURES + NUMBERIC_FEATURES]
     y = df[LABEL_CLASS]
 
     label_encoder = defaultdict(LabelEncoder)
 
-    # TODO do we have all labels in the dataset after downsampling?
-    x = x.apply(lambda feature: label_encoder[feature.name].fit_transform(feature))
+    x[CATEGORICAL_FEATURES] = x[CATEGORICAL_FEATURES].apply(
+        lambda feature: label_encoder[feature.name].fit_transform(feature)
+    )
 
-    return train_test_split(x, y, test_size=split_size)
 
 def random_under_sampler(x, y):
-    sampler = RandomUnderSampler(sampling_strategy='not minority', random_state=1)
+    sampler = RandomUnderSampler(sampling_strategy="not minority", random_state=1)
     return sampler.fit_resample(x, y)
 
 
