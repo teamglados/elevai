@@ -3,6 +3,7 @@ from ray import tune
 from ray.tune.suggest import ConcurrencyLimiter
 from ray.tune.schedulers import AsyncHyperBandScheduler
 from ray.tune.suggest.hyperopt import HyperOptSearch
+from sklearn.model_selection import train_test_split, KFold
 
 
 from data import get_data, smoteenn, random_under_sampler
@@ -62,6 +63,19 @@ def sample_data(x, y, sampler):
         raise ValueError("Unknown sampler type!")
 
 
+def get_kfold_datasets(x, y, n, train_sampler, test_sampler):
+    kf = KFold(n_splits=n, shuffle=True, random_state=1)
+    data = [
+        (
+            sample_data(x.iloc[train_index], y.iloc[train_index], train_sampler)
+            + sample_data(x.iloc[test_index], y.iloc[test_index], test_sampler)
+        )
+        for train_index, test_index in kf.split(x)
+    ]
+
+    return data
+
+
 def run(
     debug: bool = False,
     model="xgboost",
@@ -82,7 +96,13 @@ def run(
     train_x, train_y = sample_data(train_x, train_y, train_sampler)
     test_x, test_y = sample_data(test_x, test_y, test_sampler)
 
-    data = train_x, test_x, train_y, test_y
+    if kfold_n:
+        data = get_kfold_datasets(x, y, kfold_n, train_sampler, test_sampler)
+    else:
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=3)
+        data = [
+            sample_data(x_train, y_train, train_sampler) + sample_data(x_test, y_test, test_sampler)
+        ]
 
     if debug:
         debug_train(model, data)
