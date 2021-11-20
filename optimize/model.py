@@ -9,6 +9,7 @@ from optimize.models import conver_probs_to_label
 from optimize.models import xgboost, random_forest, catboost, lightgbm
 from optimize.data import get_data, smoteenn_sampler, random_under_sampler, get_test_data
 from utils.logger import get_logger
+import json
 
 TARGET_METRIC = "f2_score"
 TARGET_METRIC_MODE = "max"
@@ -111,11 +112,30 @@ def run(
     x, y = get_data(data_path)
 
     if kfold_n:
-        data = get_kfold_datasets(x, y, kfold_n, train_sampler, test_sampler)
+        data = get_kfold_datasets(
+            x,
+            y,
+            kfold_n,
+            train_sampler,
+            test_sampler
+        )
     else:
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=3)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x,
+            y,
+            test_size=0.1,
+            random_state=3
+        )
         data = [
-            sample_data(x_train, y_train, train_sampler) + sample_data(x_test, y_test, test_sampler)
+            sample_data(
+                x_train,
+                y_train,
+                train_sampler
+            ) + sample_data(
+                x_test,
+                y_test,
+                test_sampler
+            )
         ]
 
     if debug:
@@ -124,6 +144,7 @@ def run(
         analysis = tune_model(model, data, max_concurrent, num_samples)
         best_config = analysis.best_config
         LOGGER.info(analysis.best_result)
+        print('best config: ', json.dumps(best_config, indent=2, sort_keys=True))
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=3)
     # keep same order
@@ -136,8 +157,9 @@ def run(
     test_data["feedback"] = pred_labels
     test_data["case_id"] = case_id
 
-    import pdb
+    return
 
+    import pdb
     pdb.set_trace()
 
     # TODO test that this stores the right values. Split know data and use that
