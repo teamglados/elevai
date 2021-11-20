@@ -21,6 +21,8 @@ const { styled, css, theme, createTheme, useTheme, ThemeProvider, config } =
         background: '#000000',
         overlay: 'rgba(0, 0, 0, 0.5)',
         surface: 'rgba(150, 150, 150, 0.12)',
+        surfaceDistinct: 'rgba(150, 150, 150, 0.2)',
+        surfaceClear: 'rgba(150, 150, 150, 0.5)',
       },
       space: {
         none: 0,

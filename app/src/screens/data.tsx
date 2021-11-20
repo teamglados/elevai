@@ -1,5 +1,5 @@
 import { sub } from 'date-fns';
-import { range } from 'lodash';
+import { clamp, range } from 'lodash';
 import React from 'react';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,8 +24,9 @@ export type FeatureType =
 
 export type Feature = {
   id: number;
-  name: string;
+  label: string;
   type: FeatureType;
+  value: number | string;
   icon: React.ReactNode;
 };
 
@@ -87,41 +88,49 @@ export const incidents: Incident[] = [
   },
 ];
 
+const getFeatureValue = () => clamp(150 * Math.random(), 40, 150 - 10);
+
 export const features: Feature[] = [
   {
     id: 1,
     type: 'speed',
-    name: 'Speed',
+    label: 'Speed',
+    value: getFeatureValue(),
     icon: <MCIcon name="speedometer" size={18} color="#90d4ff" />,
   },
   {
     id: 2,
     type: 'load',
-    name: 'Load',
+    label: 'Load',
+    value: getFeatureValue(),
     icon: <MCIcon name="weight-gram" size={18} color="#90d4ff" />,
   },
   {
     id: 3,
-    type: 'usage',
-    name: 'Usage',
-    icon: <IonIcon name="md-download-outline" size={18} color="#90d4ff" />,
-  },
-  {
-    id: 4,
     type: 'floors',
-    name: 'Floors',
+    label: 'Floors',
+    value: getFeatureValue(),
     icon: <MCIcon name="format-list-numbered-rtl" size={18} color="#90d4ff" />,
   },
   {
-    id: 6,
+    id: 4,
+    type: 'usage',
+    label: 'Usage',
+    value: 'Heavy use',
+    icon: <IonIcon name="md-download-outline" size={18} color="#90d4ff" />,
+  },
+  {
+    id: 5,
     type: 'earea',
-    name: 'Area',
+    label: 'Area',
+    value: 'Lobby',
     icon: <MCIcon name="floor-plan" size={18} color="#90d4ff" />,
   },
   {
-    id: 7,
+    id: 6,
     type: 'ecategory',
-    name: 'Category',
+    label: 'Category',
+    value: 'MiniSpace™ DX',
     icon: <MdIcon name="category" size={18} color="#90d4ff" />,
   },
 ];

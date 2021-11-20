@@ -6,7 +6,7 @@ import { Incident, maintenanceHistory } from '../data';
 import { Text, Stack, CollapseSection, Spacer } from '../../components';
 import { styled } from '../../styles/styled';
 import LineChart from './LineChart';
-import BarChart from './BarChart';
+import IncidentFeatures from './IncidentFeatures';
 import { format } from 'date-fns';
 
 type Props = {
@@ -34,6 +34,10 @@ export default function IncidentDetails({ data }: Props) {
   return (
     <Wrapper>
       <Stack axis="y" space="4">
+        <IncidentFeatures />
+
+        <Spacer axis="y" space="6" />
+
         <Content>
           <Headline variant="headline">Incident details</Headline>
         </Content>
@@ -100,7 +104,6 @@ export default function IncidentDetails({ data }: Props) {
         </Content>
 
         <LineChart />
-        <BarChart />
       </Stack>
     </Wrapper>
   );
@@ -126,10 +129,10 @@ const Headline = styled(Text, {
 });
 
 const ARButton = styled('TouchableOpacity', {
-  borderWidth: 1,
-  borderColor: '$surface',
+  borderWidth: 2,
+  borderColor: '$surfaceDistinct',
   borderRadius: 12,
-  padding: '$1',
+  padding: 3,
 });
 
 const IconWrapper = styled('View', {
@@ -138,5 +141,5 @@ const IconWrapper = styled('View', {
   flexCenter: 'column',
   borderRadius: '$md',
   alignSelf: 'flex-start',
-  backgroundColor: 'rgba(150, 150, 150, 0.5)',
+  backgroundColor: '$surfaceClear',
 });
