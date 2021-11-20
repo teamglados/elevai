@@ -4,15 +4,15 @@ import { useWindowDimensions } from 'react-native';
 import { Svg, Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 
 import { styled, useTheme } from '../../styles/styled';
-import { features } from './data';
-import { Stack } from '../../components';
+import { features } from '../data';
+import { Stack, Text } from '../../components';
 
 const MAX_Y = 200;
 
 function BarChart() {
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
-  const width = windowWidth - 16;
+  const width = windowWidth;
   const height = MAX_Y;
 
   const bars = React.useMemo(() => {
@@ -60,6 +60,14 @@ function BarChart() {
             </FeatureIconWrapper>
           ))}
         </Stack>
+
+        <FeatureLabels axis="x" space="none" justify="between" align="center">
+          {features.map((feature) => (
+            <Text key={feature.id} variant="bodyExtraSmall">
+              {feature.name}
+            </Text>
+          ))}
+        </FeatureLabels>
       </Stack>
     </Wrapper>
   );
@@ -79,6 +87,11 @@ const FeatureIcon = styled('View', {
   flexCenter: 'row',
   borderRadius: '$full',
   backgroundColor: '$surface',
+});
+
+const FeatureLabels = styled(Stack, {
+  paddingLeft: 16,
+  paddingRight: 8,
 });
 
 export default React.memo(BarChart);

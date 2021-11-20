@@ -1,7 +1,7 @@
 import React from 'react';
 import { addDays } from 'date-fns';
 import { range, clamp } from 'lodash';
-import { Dimensions, PixelRatio, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Svg, Defs, LinearGradient, Stop, Path, Line } from 'react-native-svg';
 import * as d3Shape from 'd3-shape';
 import * as d3Scale from 'd3-scale';
@@ -13,7 +13,7 @@ const MAX_Y = 240;
 function LineChart() {
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
-  const width = windowWidth - 16;
+  const width = windowWidth;
   const height = MAX_Y;
 
   const { line, threshold } = React.useMemo(() => {
@@ -65,7 +65,7 @@ function LineChart() {
             stopColor={theme.colors.chartPositive.value}
             offset={`${threshold}%`}
           />
-          <Stop stopColor="#222" offset="100%" />
+          <Stop stopColor={theme.colors.background.value} offset="100%" />
         </LinearGradient>
 
         <LinearGradient
@@ -109,7 +109,7 @@ function LineChart() {
         y1={`${threshold}%`}
         x2="100%"
         y2={`${threshold}%`}
-        stroke="rgba(255, 255, 255, 0.6)"
+        stroke="rgba(255, 255, 255, 0.5)"
         strokeWidth="1"
         strokeDasharray="4,4"
       />
@@ -119,24 +119,6 @@ function LineChart() {
 
 function randomBetwen(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function getYMinMax(path: any) {
-  const windowWidth = Dimensions.get('window').width;
-  const n = PixelRatio.getPixelSizeForLayoutSize(windowWidth) * 2;
-
-  const lineLength = path.getTotalLength();
-  const interval = lineLength / n;
-
-  const points = range(n).map((d) => {
-    const point = path.getPointAtLength(d * interval);
-    return point.y;
-  });
-
-  return {
-    min: Math.min(...points),
-    max: Math.max(...points),
-  };
 }
 
 export default React.memo(LineChart);

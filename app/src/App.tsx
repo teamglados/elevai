@@ -6,6 +6,7 @@ import { styled, ThemeProvider } from './styles/styled';
 import { useScreenOptions } from './styles/helpers';
 import HomeScreen from './screens/home';
 import ARScreen from './screens/ar';
+import IncidentScreen from './screens/incident';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +19,12 @@ function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerLargeTitle: true, headerTitle: 'Elevators' }}
+          options={{ headerLargeTitle: true, headerTitle: 'Incidents' }}
+        />
+        <Stack.Screen
+          name="Incident"
+          component={IncidentScreen}
+          options={{ headerLargeTitle: true, headerTitle: 'Incident' }}
         />
         <Stack.Screen
           name="AR"

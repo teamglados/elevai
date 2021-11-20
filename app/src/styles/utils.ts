@@ -6,6 +6,7 @@ export type TypographyVariant =
   | 'body'
   | 'bodySmall'
   | 'bodyExtraSmall'
+  | 'headline'
   | 'title1'
   | 'title2'
   | 'title3';
@@ -17,7 +18,7 @@ const typographyVariants: {
 } = {
   $body: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   $bodySmall: {
     fontSize: 14,
@@ -27,15 +28,21 @@ const typographyVariants: {
     fontSize: 10,
     fontWeight: '500',
   },
+  $headline: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
   $title1: {
     fontSize: 64,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
   $title2: {
     fontSize: 48,
+    fontWeight: '500',
   },
   $title3: {
     fontSize: 26,
+    fontWeight: '700',
   },
 };
 
@@ -56,18 +63,25 @@ export const typographyARVariants: {
     fontFamily: 'San Fransisco',
     fontSize: 8 * FONT_SIZE_FACTOR,
   },
+  headline: {
+    fontFamily: 'San Fransisco',
+    fontSize: 18 * FONT_SIZE_FACTOR,
+    fontWeight: '700',
+  },
   title1: {
     fontFamily: 'San Fransisco',
     fontSize: 64 * FONT_SIZE_FACTOR,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
   title2: {
     fontFamily: 'San Fransisco',
     fontSize: 48 * FONT_SIZE_FACTOR,
+    fontWeight: '500',
   },
   title3: {
     fontFamily: 'San Fransisco',
     fontSize: 26 * FONT_SIZE_FACTOR,
+    fontWeight: '700',
   },
 };
 

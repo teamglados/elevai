@@ -19,7 +19,7 @@ const { styled, css, theme, createTheme, useTheme, ThemeProvider, config } =
         textInvert: '#000000',
         background: '#000000',
         overlay: 'rgba(0, 0, 0, 0.5)',
-        surface: 'rgba(150, 150, 150, 0.22)',
+        surface: 'rgba(150, 150, 150, 0.12)',
       },
       space: {
         none: 0,
