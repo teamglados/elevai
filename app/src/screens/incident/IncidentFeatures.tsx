@@ -4,16 +4,21 @@ import { useWindowDimensions } from 'react-native';
 import { Svg, Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 
 import { styled, useTheme } from '../../styles/styled';
-import { features } from '../data';
 import { Stack, Text } from '../../components';
+import { features } from '../data';
 
 function IncidentFeatures() {
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
   const width = windowWidth / 2;
 
-  const bars = features.filter((f) => isNumber(f.value));
-  const categories = features.filter((f) => isString(f.value));
+  const data = features.map((feature) => ({
+    ...feature,
+    value: feature.value(),
+  }));
+
+  const bars = data.filter((d) => isNumber(d.value));
+  const categories = data.filter((d) => isString(d.value));
   const height = Math.max(...bars.map((b) => b.value as number));
 
   return (

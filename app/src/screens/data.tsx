@@ -9,8 +9,8 @@ export type Incident = {
   id: number;
   location: string;
   name: string;
+  reportedAt: Date;
   accuracy: number;
-  features: any;
 };
 
 export type FeatureType =
@@ -26,14 +26,15 @@ export type Feature = {
   id: number;
   label: string;
   type: FeatureType;
-  value: number | string;
   icon: React.ReactNode;
+  value: () => number | string;
 };
 
 export type MaintenanceEvent = {
   id: number;
   date: Date;
   status: 'Completed' | 'Irrelevant';
+  reportedAt: Date;
   flaggedMetrics: string[];
   technician: {
     avatar: any;
@@ -48,49 +49,49 @@ export const incidents: Incident[] = [
     location: 'Spektri Business Park',
     name: 'Elev X1',
     accuracy: 90,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
   {
     id: 2,
     location: 'Spektri Business Park',
     name: 'Elev X2',
     accuracy: 30,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
   {
     id: 3,
     location: 'Redi Shopping Center',
     name: 'Elev ZS4',
     accuracy: 40,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
   {
     id: 4,
     location: 'Redi Shopping Center',
     name: 'Elev ZS5',
     accuracy: 70,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
   {
     id: 5,
     location: 'Redi Shopping Center',
     name: 'Elev ZS6',
     accuracy: 20,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
   {
     id: 6,
     location: 'Tripla Shopping Center',
     name: 'Elev AV9',
     accuracy: 95,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
   {
     id: 7,
     location: 'Clarion Hotel',
     name: 'Elev XY3',
     accuracy: 25,
-    features: {},
+    reportedAt: sub(new Date(), { weeks: 1 }),
   },
 ];
 
@@ -101,42 +102,42 @@ export const features: Feature[] = [
     id: 1,
     type: 'speed',
     label: 'Speed',
-    value: getFeatureValue(),
+    value: getFeatureValue,
     icon: <MCIcon name="speedometer" size={18} color="#90d4ff" />,
   },
   {
     id: 2,
     type: 'load',
     label: 'Load',
-    value: getFeatureValue(),
+    value: getFeatureValue,
     icon: <MCIcon name="weight-gram" size={18} color="#90d4ff" />,
   },
   {
     id: 3,
     type: 'floors',
     label: 'Floors',
-    value: getFeatureValue(),
+    value: getFeatureValue,
     icon: <MCIcon name="format-list-numbered-rtl" size={18} color="#90d4ff" />,
   },
   {
     id: 4,
     type: 'usage',
     label: 'Usage',
-    value: 'Heavy use',
+    value: () => 'Heavy use',
     icon: <IonIcon name="md-download-outline" size={18} color="#90d4ff" />,
   },
   {
     id: 5,
     type: 'earea',
     label: 'Area',
-    value: 'Lobby',
+    value: () => 'Lobby',
     icon: <MCIcon name="floor-plan" size={18} color="#90d4ff" />,
   },
   {
     id: 6,
     type: 'ecategory',
     label: 'Category',
-    value: 'MiniSpace™ DX',
+    value: () => 'MiniSpace™ DX',
     icon: <MdIcon name="category" size={18} color="#90d4ff" />,
   },
 ];
@@ -145,12 +146,14 @@ const avatar1 = require('../assets/avatar1.jpg');
 const avatar2 = require('../assets/avatar2.jpg');
 const avatar3 = require('../assets/avatar3.jpg');
 const avatars = [avatar1, avatar2, avatar3];
+
 export const metrics = ['Metric 1', 'Metric 2', 'Metric 3'];
 
 export const maintenanceHistory: MaintenanceEvent[] = range(5).map((i) => ({
   id: i,
   date: sub(new Date(), { weeks: i + 1 }),
   status: Math.random() > 0.5 ? 'Completed' : 'Irrelevant',
+  reportedAt: sub(new Date(), { weeks: i + 1 }),
   flaggedMetrics:
     Math.random() > 0.5
       ? (sampleSize(metrics, 2) as string[])

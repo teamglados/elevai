@@ -1,6 +1,7 @@
 import React from 'react';
 import FeIcon from 'react-native-vector-icons/Feather';
 import McIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MdIcon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Incident, maintenanceHistory, metrics } from '../data';
@@ -9,6 +10,7 @@ import { styled, useTheme } from '../../styles/styled';
 import LineChart from './LineChart';
 import IncidentFeatures from './IncidentFeatures';
 import MaintentenanceEvent from './MaintenanceEvent';
+import { format } from 'date-fns';
 
 type Props = {
   data: Incident;
@@ -23,7 +25,7 @@ export default function IncidentDetails({ data }: Props) {
       headerRight: () => (
         <ARButton onPress={() => navigation.navigate('AR', { incident: data })}>
           <IconWrapper>
-            <FeIcon name="box" size={16} color="#000" />
+            <FeIcon name="box" size={14} color="#000" />
             <Text variant="bodyExtraSmall" color="textInvert">
               AR
             </Text>
@@ -49,13 +51,71 @@ export default function IncidentDetails({ data }: Props) {
         <Content>
           <Card>
             <Stack axis="y" space="3">
-              <Text variant="bodySmall">{data.location}</Text>
+              <Stack axis="x" space="2" align="center" justify="between">
+                <Stack axis="x" space="2" align="center">
+                  <DetailsIcon>
+                    {data.accuracy < 60 ? (
+                      <McIcon
+                        name="shield-search"
+                        size={18}
+                        color={theme.colors.primaryLight.value}
+                      />
+                    ) : (
+                      <McIcon
+                        name="shield-alert"
+                        size={18}
+                        color={theme.colors.chartNegativeLight.value}
+                      />
+                    )}
+                  </DetailsIcon>
 
-              <CollapseSection title="Maintenance history" icon="history">
-                <Text variant="body">TODO</Text>
-              </CollapseSection>
+                  <Text variant="body" color="textMutedLight">
+                    Status
+                  </Text>
+                </Stack>
 
-              <Text variant="bodySmall">More stuff here</Text>
+                <Text variant="bodySmall" color="textMuted">
+                  {data.accuracy < 60 ? 'Needs investigation' : 'Critical'}
+                </Text>
+              </Stack>
+
+              <Stack axis="x" space="2" align="center" justify="between">
+                <Stack axis="x" space="2" align="center">
+                  <DetailsIcon>
+                    <MdIcon
+                      name="location-pin"
+                      size={18}
+                      color={theme.colors.text.value}
+                    />
+                  </DetailsIcon>
+                  <Text variant="body" color="textMutedLight">
+                    Location
+                  </Text>
+                </Stack>
+
+                <Text variant="bodySmall" color="textMuted">
+                  {data.location}
+                </Text>
+              </Stack>
+
+              <Stack axis="x" space="2" align="center" justify="between">
+                <Stack axis="x" space="2" align="center">
+                  <DetailsIcon>
+                    <McIcon
+                      name="clock-alert-outline"
+                      size={18}
+                      color={theme.colors.text.value}
+                    />
+                  </DetailsIcon>
+                  <Text variant="body" color="textMutedLight">
+                    Reported at
+                  </Text>
+                </Stack>
+
+                <Text variant="bodySmall" color="textMuted">
+                  {format(data.reportedAt, 'dd.MM.yyyy (HH:mm)')}
+                </Text>
+              </Stack>
             </Stack>
           </Card>
         </Content>
@@ -126,6 +186,14 @@ const Card = styled('View', {
   borderRadius: '$md',
 });
 
+const DetailsIcon = styled('View', {
+  width: 32,
+  height: 32,
+  flexCenter: 'column',
+  borderRadius: '$md',
+  backgroundColor: '$surfaceDistinct',
+});
+
 const CardChart = styled('View', {
   marginHorizontal: '-$3',
   marginBottom: '-$3',
@@ -137,14 +205,14 @@ const Headline = styled(Text, {
 
 const ARButton = styled('TouchableOpacity', {
   borderWidth: 2,
-  borderColor: '$surfaceDistinct',
+  borderColor: '$surfaceClear',
   borderRadius: 12,
-  padding: 3,
+  padding: 2,
 });
 
 const IconWrapper = styled('View', {
-  width: 32,
-  height: 32,
+  width: 30,
+  height: 30,
   flexCenter: 'column',
   borderRadius: '$md',
   alignSelf: 'flex-start',
