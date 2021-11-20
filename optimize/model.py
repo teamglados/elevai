@@ -23,9 +23,7 @@ def get_model_funcs(model, debug=False):
         return catboost.train, catboost.get_search_space(debug)
     elif model == "lightgbm":
         return lightgbm.train, lightgbm.get_search_space(debug)
-
-    else:
-        raise ValueError("Unknown model type!")
+    raise ValueError("Unknown model type!")
 
 def _single_train(train_f, config, data):
     analysis = train_f(config, data)
@@ -41,7 +39,6 @@ def single_train(model, data, config=None):
 
 def train(train_f, use_tune):
     def _train(config, data):
-        nonlocal use_tune
         metrics_items = []
         for _d in data:
             output = train_f(config, _d)
@@ -51,9 +48,7 @@ def train(train_f, use_tune):
         _metrics = metrics_df.mean().to_dict()
         if use_tune:
             tune.report(**_metrics, done=True)
-
         return _metrics
-
     return _train
 
 def tune_model(model, data, max_concurrent, num_samples):
@@ -84,8 +79,7 @@ def sample_data(x, y, sampler):
         return random_under_sampler(x, y)
     elif sampler == "nosampler":
         return x, y
-    else:
-        raise ValueError("Unknown sampler type!")
+    raise ValueError("Unknown sampler type!")
 
 def get_kfold_datasets(x, y, n, train_sampler, test_sampler):
     kf = KFold(n_splits=n, shuffle=True, random_state=1)
