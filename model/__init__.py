@@ -5,7 +5,7 @@ import sklearn.metrics as _metrics
 from custom.score import f2_score
 
 
-def metrics(y_true, preds, use_tune):
+def metrics(y_true, preds):
     # NOTE: transfer preds to labels
     pred_labels = np.zeros(y_true.shape)
     pred_labels[np.where(preds > 0.5)] = 1
@@ -18,7 +18,5 @@ def metrics(y_true, preds, use_tune):
         "recall": _metrics.recall_score(y_true, pred_labels, zero_division=0),
         "f1_score": _metrics.f1_score(y_true, pred_labels, zero_division=0),
     }
-    if use_tune:
-        tune.report(**metrics, done=True)
 
     return metrics

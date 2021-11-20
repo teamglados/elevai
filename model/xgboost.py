@@ -4,8 +4,8 @@ from ray import tune
 from model import metrics
 
 
-def train(config, data, use_tune=True):
-    train_x, test_x, train_y, test_y = data
+def train(config, data):
+    train_x, train_y, test_x, test_y = data
 
     # Build input matrices for XGBoost
     train_set = xgb.DMatrix(train_x, label=train_y)
@@ -18,7 +18,7 @@ def train(config, data, use_tune=True):
     )
     preds = model.predict(test_set)
 
-    return metrics(test_y, preds, use_tune)
+    return metrics(test_y, preds)
 
 
 def get_search_space(debug=False):

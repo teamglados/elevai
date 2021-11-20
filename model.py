@@ -1,4 +1,5 @@
 import fire
+import pandas as pd
 from ray import tune
 from ray.tune.suggest import ConcurrencyLimiter
 from ray.tune.schedulers import AsyncHyperBandScheduler
@@ -8,8 +9,10 @@ from sklearn.model_selection import train_test_split, KFold
 
 from data import get_data, smoteenn, random_under_sampler
 from model import xgboost, random_forest, catboost, lightgbm
+from utils import get_logger
 
 TARGET_METRIC = "f2_score"
+LOGGER = get_logger(__name__)
 
 
 def get_model_funcs(model, debug=False):
@@ -28,11 +31,29 @@ def get_model_funcs(model, debug=False):
 
 def debug_train(model, data):
     _train, _search_space = get_model_funcs(model, True)
-    analysis = _train(_search_space, data, use_tune=False)
-    print(analysis)
+    train_f = train(train_f=_train, use_tune=False)
+    analysis = train_f(_search_space, data)
+    LOGGER.info(analysis)
 
 
-def tune_model(model, data, cpus, max_concurrent, num_samples):
+def train(train_f, use_tune):
+    def _train(config, data):
+        metrics_items = []
+        for _d in data:
+            output = train_f(config, _d)
+            metrics_items.append(output)
+
+        metrics_df = pd.DataFrame(metrics_items)
+        _metrics = metrics_df.mean().to_dict()
+        if use_tune:
+            tune.report(**_metrics, done=True)
+
+        return _metrics
+
+    return _train
+
+
+def tune_model(model, data, max_concurrent, num_samples):
     algo = HyperOptSearch()
     algo = ConcurrencyLimiter(algo, max_concurrent=max_concurrent)
 
@@ -41,10 +62,10 @@ def tune_model(model, data, cpus, max_concurrent, num_samples):
     _train, _search_space = get_model_funcs(model)
 
     analysis = tune.run(
-        tune.with_parameters(_train, data=data),
+        tune.with_parameters(train(train_f=_train, use_tune=True), data=data),
         metric=TARGET_METRIC,
         mode="max",
-        resources_per_trial={"cpu": cpus},
+        resources_per_trial={"cpu": 1},
         config=_search_space,
         num_samples=num_samples,
         search_alg=algo,
@@ -81,20 +102,15 @@ def run(
     model="xgboost",
     train_sampler="smothe",
     test_sampler="randomunder",
-    cpus: int = 1,
     max_concurrent=4,
     data_path="data/train.csv",
-    split_size=0.1,
     num_samples=100,
+    kfold_n=5,
 ):
     """
     Example command: python model.py --model=randomforest --debug
     """
-    train_x, test_x, train_y, test_y = get_data(data_path, split_size=split_size)
-
-    # run sampler
-    train_x, train_y = sample_data(train_x, train_y, train_sampler)
-    test_x, test_y = sample_data(test_x, test_y, test_sampler)
+    x, y = get_data(data_path)
 
     if kfold_n:
         data = get_kfold_datasets(x, y, kfold_n, train_sampler, test_sampler)
@@ -107,7 +123,7 @@ def run(
     if debug:
         debug_train(model, data)
     else:
-        analysis = tune_model(model, data, cpus, max_concurrent, num_samples)
+        analysis = tune_model(model, data, max_concurrent, num_samples)
         print(analysis.best_config)
         print(analysis.best_result)
 

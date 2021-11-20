@@ -34,6 +34,8 @@ def get_data(path: str, split_size: float = 0.1):
         lambda feature: label_encoder[feature.name].fit_transform(feature)
     )
 
+    return x, y
+
 
 def random_under_sampler(x, y):
     sampler = RandomUnderSampler(sampling_strategy="not minority", random_state=1)

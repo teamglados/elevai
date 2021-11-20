@@ -1,16 +1,15 @@
-from ray import tune
 from sklearn.ensemble import RandomForestClassifier
+from ray import tune
 
 from model import metrics
 
 
-def train(config, data, use_tune=True):
-    train_x, test_x, train_y, test_y = data
+def train(config, data):
+    train_x, train_y, test_x, test_y = data
     rf = RandomForestClassifier(**config)
     rf.fit(train_x, train_y)
     preds = rf.predict(test_x)
-
-    return metrics(test_y, preds, use_tune)
+    return metrics(test_y, preds)
 
 
 def get_search_space(debug=False):
