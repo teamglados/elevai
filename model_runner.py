@@ -120,7 +120,9 @@ def run(
     kfold_n=5,
 ):
     """
-    Example command: python model.py --model=randomforest --debug
+    Example command: python model_runner.py --model=xgboost --kfold_n=5
+
+    Example debug command: python model_runner.py --model=xgboost --kfold_n=5 --debug
     """
     x, y = get_data(data_path)
 
@@ -150,7 +152,12 @@ def run(
     test_data["feedback"] = pred_labels
     test_data["case_id"] = case_id
 
+    import pdb
+
+    pdb.set_trace()
+
     # TODO test that this stores the right values. Split know data and use that
+    # one option to test: python model_runner.py --model=xgboost --kfold_n=5 --debug --test_data_path="data/train.csv"
     test_data[["case_id", "action_recommendation_id", "feedback"]].to_csv(
         "submission.csv", index=False
     )
