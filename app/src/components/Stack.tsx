@@ -9,7 +9,7 @@ type Props = {
   axis?: 'x' | 'y';
   fluid?: boolean;
   align?: 'center' | 'start' | 'end' | 'stretch';
-  justify?: 'center' | 'start' | 'end';
+  justify?: 'center' | 'start' | 'end' | 'between' | 'around';
   style?: ViewStyle;
   childStyle?: ViewStyle | ((index: number) => ViewStyle);
   children: React.ReactNode;
@@ -82,6 +82,8 @@ const StackWrapper = styled('View', {
       center: { justifyContent: 'center' },
       start: { justifyContent: 'flex-start' },
       end: { justifyContent: 'flex-end' },
+      between: { justifyContent: 'space-between' },
+      around: { justifyContent: 'space-around' },
     },
   },
 });
