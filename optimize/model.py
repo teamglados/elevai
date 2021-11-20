@@ -79,7 +79,7 @@ def sample_data(x, y, sampler):
         return random_under_sampler(x, y)
     elif sampler == "nosampler":
         return x, y
-    raise ValueError("Unknown sampler type!")
+    raise ValueError(f'sampler "{sampler}" is not supported')
 
 def get_kfold_datasets(x, y, n, train_sampler, test_sampler):
     kf = KFold(n_splits=n, shuffle=True, random_state=1)
@@ -96,8 +96,8 @@ def get_kfold_datasets(x, y, n, train_sampler, test_sampler):
 def run(
     debug: bool = False,
     model="xgboost",
-    train_sampler="smothe",
-    test_sampler="randomunder",
+    train_sampler="nosampler",
+    test_sampler="nosampler",
     max_concurrent=4,
     data_path="data/train.csv",
     test_data_path="data/test.csv",
