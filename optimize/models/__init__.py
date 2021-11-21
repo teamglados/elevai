@@ -2,23 +2,25 @@ from sklearn.utils import compute_sample_weight
 import sklearn.metrics as _metrics
 import numpy as np
 
-from ray import tune
 
-from utils.metrics import f2_score
+from utils.metrics import f2_score, fb_score
 
-def conver_probs_to_label(preds):
+
+def conver_probs_to_label(preds, thresh):
     pred_labels = np.zeros(preds.shape)
-    pred_labels[np.where(preds > 0.5)] = 1
+    pred_labels[np.where(preds > thresh)] = 1
     return pred_labels.astype(int)
 
-def metrics(y_true, preds):
+
+def metrics(y_true, preds, thresh=0.5):
     # NOTE: transfer preds to labels
-    pred_labels = conver_probs_to_label(preds)
+    pred_labels = conver_probs_to_label(preds, thresh)
 
     sample_weights = compute_sample_weight({0: 8.1, 1: 1.14}, y_true)
 
     computed_metrics = {
         "f2_score": f2_score(y_true, pred_labels),
+        "fb125_score": fb_score(1.25, y_true, pred_labels),
         "f1_score": _metrics.f1_score(y_true, pred_labels, zero_division=0),
         "accuracy": _metrics.accuracy_score(y_true, pred_labels),
         "precision": _metrics.precision_score(y_true, pred_labels, zero_division=0),
