@@ -167,36 +167,6 @@ In our solution we ended up solving the problem in two ways:
 Check out how our app allows the technician to make the correct decision on maintenance task.
 
 | 1 | 2 | 3 | 4 | 
-|--------|------|------------|----------|
-|        |      |            |          |
-| <img src="./media/view_1.jpg" height="250px" /> |      |            |          |
-
-1. First view lists the service tasks categorized by the reliability: events with uncertantly require additional investigation from the technician before the visit
-
-
-2. To help the technician make the right decision the event view shows maintenance history and the people who where involved in previous maintenance visits. For further analysis the technician is able to see the underlying real-time sensory data that can reveal important trends. This data is sorted based on the relevance from the previous insidents that had overlapping features.
-
-<img
-    src="./media/view_2.jpg"
-    alt="Gallery"
-	title="Gallery"
-    height="300px"
-/>
-
-3. After maintenance visit the technician marks the data sources that were important to find out the underlying problem. These findings are shared between all technicians globally which ensures better knowledge sharing. This data is also important for the personnel which design algorithms that use the data.
-
-<img
-    src="./media/view_3.jpg"
-    alt="Gallery"
-	title="Gallery"
-    height="300px"
-/>
-
-4. As a final thing we want to ensure ability to inspect the equipment remote as much as possible. AR allows the technician to visualize the object for remote inspection.
-
-<img
-    src="./media/ar_2.jpg"
-    alt="Gallery"
-	title="Gallery"
-    height="300px"
-/>
+|:-:|:-:|:-:|:-:|
+|  First view lists the service tasks categorized by the reliability: events with uncertantly require additional investigation from the technician before the visit | To help the technician make the right decision the event view shows maintenance history and the people who where involved in previous maintenance visits. For further analysis the technician is able to see the underlying real-time sensory data that can reveal important trends. This data is sorted based on the relevance from the previous insidents that had overlapping features. | After maintenance visit the technician marks the data sources that were important to find out the underlying problem. These findings are shared between all technicians globally which ensures better knowledge sharing. This data is also important for the personnel which design algorithms that use the data. | As a final thing we want to ensure ability to inspect the equipment remote as much as possible. AR allows the technician to visualize the object for remote inspection. |
+| <img src="./media/view_1.jpg" height="250px" /> | <img src="./media/view_2.jpg" height="250px" /> | <img src="./media/view_3.jpg" height="250px" /> | <img src="./media/ar_2.jpg" height="250px" /> |
