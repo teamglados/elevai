@@ -59,7 +59,7 @@ def get_test_data(path):
     )
 
     LOGGER.info(f"Dataset size: {x.shape[0]}")
-    return x, df["case_id"]
+    return x, df["case_id"], df["action_recommendation_id"]
 
 
 def random_under_sampler(x, y):

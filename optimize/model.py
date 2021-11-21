@@ -142,7 +142,17 @@ def run(
     # keep same order
     data = x_train, y_train, x_test, y_test
     # is_test doesn't return labels
-    test_data, case_id = get_test_data(test_data_path)
+    test_data, case_id, arid = get_test_data(test_data_path)
+    best_config = {
+        "eta": 0.349266982006697,
+        "eval_metric": "auc",
+        "gamma": 86.4024689302477,
+        "max_depth": 23,
+        "min_child_weight": 6,
+        "objective": "binary:logistic",
+        "scale_pos_weight": 0.5,
+        "subsample": 0.8992930918233821,
+    }
     predictions = xgboost.predict(best_config, data, test_data)
 
     # model = xgb.XGBClassifier(**best_config, random_state=1, use_label_encoder=False)
@@ -160,6 +170,7 @@ def run(
 
     test_data["feedback"] = pred_labels
     test_data["case_id"] = case_id
+    test_data["action_recommendation_id"] = arid
 
     # TODO test that this stores the right values. Split know data and use that
     # one option to test: python -m optimize --model=xgboost --kfold_n=5 --debug --test_data_path="data/train.csv"
