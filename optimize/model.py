@@ -50,9 +50,10 @@ def train(train_f, use_tune):
             metrics_items.append(output)
 
         metrics_df = pd.DataFrame(metrics_items)
-        _metrics = metrics_df.mean().to_dict()
+        _metrics = metrics_df.min().to_dict()
         if use_tune:
             tune.report(**_metrics, done=True)
+
         return _metrics
 
     return _train
