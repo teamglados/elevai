@@ -10,7 +10,7 @@ import { useTheme } from '../../styles/styled';
 
 const MAX_Y = 240;
 
-function LineChart() {
+function LineChart({ index }: { index: number }) {
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
   const width = windowWidth - 16;
@@ -23,7 +23,13 @@ function LineChart() {
         [
           addDays(new Date(), i + 1),
           clamp(
-            yStep * i + 40 * Math.random() * (Math.random() > 0.5 ? 1 : -1),
+            index === 0
+              ? yStep * i + 40 * Math.random() * (Math.random() > 0.5 ? 1 : -1)
+              : MAX_Y / 2 +
+                  Math.random() *
+                    20 *
+                    Math.pow(index, 2) *
+                    (Math.random() > 0.5 ? 1 : -1),
             MAX_Y * 0.2,
             MAX_Y * 0.8,
           ),

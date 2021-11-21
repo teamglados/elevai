@@ -148,7 +148,7 @@ export default function IncidentDetails({ data }: Props) {
         <Spacer axis="y" space="2" />
 
         <Stack axis="y" space="2">
-          {metrics.map((metric) => (
+          {metrics.map((metric, index) => (
             <Content key={metric}>
               <Card>
                 <Stack axis="x" space="2" align="center">
@@ -161,7 +161,7 @@ export default function IncidentDetails({ data }: Props) {
                 </Stack>
 
                 <CardChart>
-                  <LineChart />
+                  <LineChart index={index} />
                 </CardChart>
               </Card>
             </Content>
@@ -174,7 +174,7 @@ export default function IncidentDetails({ data }: Props) {
 
 const Wrapper = styled('View', {
   flex: 1,
-  paddingTop: '$3',
+  paddingTop: '$4',
 });
 
 const Content = styled('View', {

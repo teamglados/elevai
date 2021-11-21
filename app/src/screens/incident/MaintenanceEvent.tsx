@@ -45,7 +45,7 @@ export default function MaintentenanceEvent({ event }: Props) {
                   <IonIcon
                     name="close-circle"
                     size={20}
-                    color={theme.colors.text.value}
+                    color={theme.colors.chartNegativeLight.value}
                   />
 
                   <Text variant="body" color="textMutedLight">
@@ -58,7 +58,7 @@ export default function MaintentenanceEvent({ event }: Props) {
                   <IonIcon
                     name="checkmark-circle"
                     size={20}
-                    color={theme.colors.text.value}
+                    color={theme.colors.primaryLight.value}
                   />
 
                   <Text variant="body" color="textMutedLight">

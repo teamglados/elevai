@@ -27,6 +27,7 @@ export default function HomeScreen() {
     <Wrapper>
       <SectionList
         sections={sections}
+        stickySectionHeadersEnabled={false}
         keyExtractor={(item) => String(item.id)}
         contentContainerStyle={{
           paddingBottom: insets.bottom,
