@@ -32,4 +32,5 @@ def get_search_space(debug=False):
             "min_samples_split": tune.randint(2, 5),
             "min_samples_leaf": tune.randint(1, 15),
             "max_depth": tune.choice([3, 5, 8, 12, None]),
+            "class_weight": tune.choice(['balanced', 'balanced_subsample', None])
         }
