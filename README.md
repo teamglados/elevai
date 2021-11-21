@@ -1,4 +1,4 @@
-# elevai
+# ElevAI
 
 > **Elevating predictive maintenance by combining collective domain expert knowledge and artificial intelligence.**
 
@@ -7,8 +7,11 @@
     alt="Preview"
 	title="Preview"
     width="100%"
-    style="float:left;"
+    style="float:left; margin-bottom: 50px;"
 />
+
+[[ Link to video on Vimeo ]](https://vimeo.com/648187179)
+[[ Link to full technical analysis ]](https://github.com/nardeas/elevai/tree/master/notebooks)
 
 ## Introduction
 
@@ -20,21 +23,21 @@ But it's not just about the brand. An elevator unable to move due to failure can
 
 **2. The model should be a) accurate and b) explainable. Additionally, rethinking the whole process of preventive maintenance and coming up with out-of-the-box ideas was greatly appreciated.**
 
-**3. Our solution combines the service task relevance prediction model with an improved feedback flow to the base system by leveraging the collective domain knowledge of service personnel** 
+**3. Our solution combines the model predicting service task relevance with an improved feedback flow to the base system by leveraging the collective domain knowledge of service personnel.** 
 
 ## Data
 
-> For additional details and technical implementation see the `notebooks/` section in this repository for the actual data and model exploration
+> For additional details and technical implementation see the `notebooks/` section in this repository for the actual data and model analysis
 
 <img
     src="./media/gallery.png"
     alt="Gallery"
 	title="Gallery"
     height="300px"
-    style="float: left; margin-right: 20px;"
+    style="float: left; margin: 30px;"
 />
 
-To create a system that can learn real-world data is needed. But having just data is not enough. Quality data is needed for good model performance. In academia datasets can be perfect, but in real life that's often not the case. To understand the problem space we conduct a thorough investigation of the dataprovided by our challenge partner.
+To create a system that can learn real-world data is needed. But having just data is not enough. Quality data is needed for good model performance. In academia datasets might be perfect, but in real life that's often not the case. To understand the problem space we conduct a thorough investigation of the dataprovided by our challenge partner.
 
 #### Class imbalance
 
@@ -62,11 +65,11 @@ Subcategory:
 - usage_type: ut011
 - event count: 2679
 
-Baseline performance:
+Naive baseline:
 - f2 score: 0.92299
 - accuracy: 0.70586
 
-Our Model:
+Our model:
 - f2 score: 0.926601
 - accuracy: 0.737212
 ```
@@ -76,7 +79,6 @@ This means that when the data is good we can learn. We just have to ensure bette
 ### Grouping
 
 We explore further combinations of `action_recommendation_id, action_recommendation_category, equipment_category` and `usage_type`. By grouping the data by unique combinations of these columns we can explore where most of the errors are made by computing the accuracy for each combination and segmenting the data into groups with lower than threshold accuracy (group 1), higher than threshold accuracy (groups 0, 3) and between thresholds accuracy (group 2).
-
 
 <img
     src="./media/acc_group_baseline.png"
@@ -89,8 +91,7 @@ Above graph highlights the obvious fact that most of the errors are made in grou
 
 ### Dimensionality
 
-We performed dimensionality analysis using various techniques to reveal any obvious clustering that could reveal clear improvement areas. Principal component analysis did not reveal any meaningful clustering with respect to correct labels:
-
+We performed dimensionality analysis using various techniques to explore any obvious clustering that could reveal clear improvement potential. Principal component analysis did not reveal any meaningful clustering with respect to correct/incorrect labels:
 
 <img
     src="./media/pca_01.png"
@@ -114,7 +115,7 @@ We performed dimensionality analysis using various techniques to reveal any obvi
     style="float: left; margin-bottom: 20px;"
 />
 
-Additionally, t-distributed Stochastic Neighbour Embedding (t-SNE) was utilized to obtain learned dimensionality reduction for clustering. It also did not reveal any obvious patterns, which leads us to conclude that for this dataset and modelling task only marginal improvements should be expected. 
+Additionally, t-distributed Stochastic Neighbour Embedding (t-SNE) was utilized to obtain learned dimensionality reduction for visualization and clustering. It also did not reveal any obvious patterns, which leads us to conclude that for this dataset and modelling task only marginal improvements should be expected. 
 
 <img
     src="./media/tsne_2.png"
@@ -125,36 +126,77 @@ Additionally, t-distributed Stochastic Neighbour Embedding (t-SNE) was utilized 
 
 ## Model
 
-> TODO: description
+GBT (Gradient Boosting Tree) based models perform exceptionally well with structured data. This approach was chosen here after evaluating various other baseline methods like linear/logistic regression, support-vector machines and vanilla ensemble methods like random forest. Non-parametric methods or other non-gradient methods were not explored due to time limitations.
+
+Various gradient boosting frameworks exist but the best performance, flexibility and robustness was found with Xtreme gradient boosting (XGBoost). The key is to improve the F2 score of the prediction so this was a natural target metric choice in hyperparameter tuning.
 
 ### Explainability
 
-> TODO: description
+Tree based models are in theory fully human interpretable if we visualize the decision trees in terms of feature selection rules. Example tree below:
 
-### Results
+<img
+    src="./media/tree_example_0.png"
+    alt="Gallery"
+	title="Gallery"
+/>
 
-> TODO: results
+By inspecting each tree in the model ensemble one can in theory fully trace the decision making path from input features to outputs.
 
-All this knowledge from the data revealed us that improving the model significantly would be an impossible task. The actual problem is that the underying features are not good enough. That lead us to find out the perfect solution.
+Another method for explaining the model outputs that works even for fully black-box models is the Shapley method. It explores the per feature contribution to output magnitude and can reveal relative feature importances:
 
+<img
+    src="./media/shap.png"
+    alt="Gallery"
+	title="Gallery"
+/>
+
+Above graph also shows the selected features used in the test data submission.
+
+### Conclusions
+
+The knowledge collected in the data analysis phase revealed that improving the model significantly would be impossible. The actual problem is that the underying features are not descriptive enough and can only lead to marginal improvements. This lead us to step outside the box and rethink the whole process.
 
 ## How it's used in real life
 
 In our solution we ended up solving the problem in two ways:
 
-1. We want to use machine learning as well as possible despite the limitations in the current dataset. This means that we have to be able to identify the reliable predictions from the unreliable once. We did it by tagging all event our system predicted unreliable for the technician. Technician is able to do the final decision then based on the model prediction and historical maintance data show in the app.
+1. We use machine learning within the limitations of the current dataset. This means that we have to be able to identify the reliable predictions from the unreliable. We did this by tagging all events our system predicted unreliable for the technician. Technician is then able to make the final decision based on the model prediction and historical maintenance data shown in the app.
 
-2. Unneeded maintance event is not wasted if we can collect information from it. Our app allows the technication to specify why a visit was needed or not. This will increase the visibility on the raw signals that the censors produce. This means that for example in case where repair parts have a quality error this should be visible in our data very quickly since technicians over the world can mark that high wear in a specific mechanical part was the reason for the maintenance need.
+2. Unnecessary maintance visit can still be valuable if we can collect information from it. Our UI feature preview allows the technician to specify the reasons why a visit was (or wasn't) necessary. This will increase the visibility of the raw signals that the sensors and base system produce. This also means that, for example, in a case where certain spare parts have quality errors it should be visible in our data very quickly since technicians around the world can flag e.g high wear sensory readouts in a specific part as the reason for the maintenance need.
 
 Check out how our app allows the technician to make the correct decision on maintenance task.
 
+| 1 | 2 | 3 | 4 | 
+|--------|------|------------|----------|
+|        |      |            |          |
+| <img src="./media/view_1.jpg" height="250px" /> |      |            |          |
 
-1. First view lists the maintance events categorized by the reliability: events with uncertantly require actions from the technician before the visit
-2. To help techication make the right decision the event view shows maintenance history and people who where involved with the last maintancen events. For further analysis the technician is able to see the underlying cencor data. This data is sorted based on the relevance from the previous insidents that had overlapping features.
-3. After maintenance visit technician marks the data sources that were important to find out the underlying problem. These findings are shared between all technicians globally which ensures better knowledge sharing. This data is also important for the personel which design algorithms that use the data.
+1. First view lists the service tasks categorized by the reliability: events with uncertantly require additional investigation from the technician before the visit
+
+
+2. To help the technician make the right decision the event view shows maintenance history and the people who where involved in previous maintenance visits. For further analysis the technician is able to see the underlying real-time sensory data that can reveal important trends. This data is sorted based on the relevance from the previous insidents that had overlapping features.
+
+<img
+    src="./media/view_2.jpg"
+    alt="Gallery"
+	title="Gallery"
+    height="300px"
+/>
+
+3. After maintenance visit the technician marks the data sources that were important to find out the underlying problem. These findings are shared between all technicians globally which ensures better knowledge sharing. This data is also important for the personnel which design algorithms that use the data.
+
+<img
+    src="./media/view_3.jpg"
+    alt="Gallery"
+	title="Gallery"
+    height="300px"
+/>
+
 4. As a final thing we want to ensure ability to inspect the equipment remote as much as possible. AR allows the technician to visualize the object for remote inspection.
 
-
-Acknowledgment
-
-- data plots
+<img
+    src="./media/ar_2.jpg"
+    alt="Gallery"
+	title="Gallery"
+    height="300px"
+/>
