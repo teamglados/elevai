@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { ViroARSceneNavigator } from '@viro-community/react-viro';
+import FeIcon from 'react-native-vector-icons/Feather';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import { styled } from '../../styles/styled';
-import { Text } from '../../components';
+import { Stack, Text } from '../../components';
 import { setupAR } from './utils';
 import { useARStore } from './state';
 import Scene from './Scene';
@@ -33,7 +34,10 @@ export default function ARScreen({ navigation }: { navigation: any }) {
       {!anchor && (
         <BadgeWrapper>
           <Badge>
-            <Text variant="body">Detecting...</Text>
+            <Stack axis="x" space="2" align="center">
+              <FeIcon name="box" size={20} color="#fff" />
+              <Text variant="subtitle">Find target surface</Text>
+            </Stack>
           </Badge>
         </BadgeWrapper>
       )}
@@ -47,18 +51,20 @@ export default function ARScreen({ navigation }: { navigation: any }) {
 
 const Wrapper = styled('View', {
   flex: 1,
+  backgroundColor: '$background',
 });
 
 const BadgeWrapper = styled('View', {
   position: 'absolute',
-  bottom: 32,
+  bottom: 40,
   left: 0,
   right: 0,
   flexCenter: 'row',
 });
 
 const Badge = styled('View', {
-  padding: 16,
+  paddingVertical: 12,
+  paddingHorizontal: 16,
   backgroundColor: '$overlay',
   borderRadius: '$full',
 });

@@ -5,7 +5,7 @@ import MdIcon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Incident, maintenanceHistory, metrics } from '../data';
-import { Text, Stack, CollapseSection, Spacer } from '../../components';
+import { Text, Stack, Spacer } from '../../components';
 import { styled, useTheme } from '../../styles/styled';
 import LineChart from './LineChart';
 import IncidentFeatures from './IncidentFeatures';
@@ -206,7 +206,7 @@ const Headline = styled(Text, {
 
 const ARButton = styled('TouchableOpacity', {
   borderWidth: 2,
-  borderColor: '$surfaceClear',
+  borderColor: '$surfaceDistinct',
   borderRadius: 12,
   padding: 2,
 });
