@@ -21,7 +21,7 @@ First thing that poped up was the imblanceness of the data. Most of the events (
 
 ### Imbalanced subcategories
 
-Clustering the data revealed that some categories are creating most of the events. What this means is that some equipment with certain censors is overpopulated in the data compared to other subcategories. To make it even harder some of these categories seem to produce a lot of incorrect maintence signals.
+Clustering the data revealed that some categories are creating most of the events. What this means is that some equipment with certain sensors is overpopulated in the data compared to other subcategories. To make it even harder some of these categories seem to produce a lot of incorrect maintence signals.
 
 If underlying features are noise for some subcategories model can't learn them. If these events are overpopulated in the data model results are hard to interpret since good performance in some areas of the data can be hard to notice. Cost of an event is high which means that better performance in some areas of the data is valuable.
 
@@ -60,7 +60,7 @@ In our solution we ended up solving the problem in two ways:
 
 1. We want to use machine learning as well as possible despite the limitations in the current dataset. This means that we have to be able to identify the reliable predictions from the unreliable once. We did it by tagging all event our system predicted unreliable for the technician. Technician is able to do the final decision then based on the model prediction and historical maintance data show in the app.
 
-2. Unneeded maintance event is not wasted if we can collect information from it. Our app allows the technication to specify why a visit was needed or not. This will increase the visibility on the raw signals that the censors produce. This means that for example in case where repair parts have a quality error this should be visible in our data very quickly since technicians over the world can mark that high wear in a specific mechanical part was the reason for the maintenance need.
+2. Unneeded maintance event is not wasted if we can collect information from it. Our app allows the technication to specify why a visit was needed or not. This will increase the visibility on the raw signals that the sensors produce. This means that for example in case where repair parts have a quality error this should be visible in our data very quickly since technicians over the world can mark that high wear in a specific mechanical part was the reason for the maintenance need.
 
 Check out how our app allows the technician to make the correct decision on maintenance task.
 
