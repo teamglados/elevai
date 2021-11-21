@@ -19,7 +19,7 @@ function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerLargeTitle: true, headerTitle: 'Incidents' }}
+          options={{ headerLargeTitle: true, headerTitle: 'Service tasks' }}
         />
         <Stack.Screen
           name="Incident"

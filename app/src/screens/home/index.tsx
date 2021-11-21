@@ -8,10 +8,6 @@ import { incidents } from '../data';
 import IncidentCard from './IncidentCard';
 import { Stack, Text } from '../../components';
 
-/*
-- Severity
-- Accuracy
-*/
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const data = groupBy(incidents, (i) =>
@@ -27,6 +23,7 @@ export default function HomeScreen() {
     <Wrapper>
       <SectionList
         sections={sections}
+        showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={false}
         keyExtractor={(item) => String(item.id)}
         contentContainerStyle={{
@@ -45,7 +42,8 @@ export default function HomeScreen() {
               <Text variant="headline">{title}</Text>
               {title === 'Investigate' && (
                 <Text variant="bodySmall" color="textMuted">
-                  Maintenance need predicted but upfront investigated is needed.
+                  Maintenance need predicted but additional investigation is
+                  needed.
                 </Text>
               )}
             </Stack>

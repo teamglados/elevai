@@ -43,7 +43,7 @@ export default function IncidentDetails({ data }: Props) {
         <Spacer axis="y" space="6" />
 
         <Content>
-          <Headline variant="headline">Incident details</Headline>
+          <Headline variant="headline">Service task details</Headline>
         </Content>
 
         <Spacer axis="y" space="2" />
@@ -121,7 +121,7 @@ export default function IncidentDetails({ data }: Props) {
         </Content>
 
         <Content>
-          <Headline variant="headline">Maintenance history</Headline>
+          <Headline variant="headline">Service history</Headline>
         </Content>
 
         <Spacer axis="y" space="2" />

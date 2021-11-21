@@ -122,8 +122,8 @@ export const features: Feature[] = [
   {
     id: 4,
     type: 'usage',
-    label: 'Usage',
-    value: () => 'Heavy use',
+    label: 'Usage category',
+    value: () => 'Office',
     icon: <IonIcon name="md-download-outline" size={18} color="#90d4ff" />,
   },
   {
@@ -136,7 +136,7 @@ export const features: Feature[] = [
   {
     id: 6,
     type: 'ecategory',
-    label: 'Category',
+    label: 'Model',
     value: () => 'MiniSpace™ DX',
     icon: <MdIcon name="category" size={18} color="#90d4ff" />,
   },
@@ -149,18 +149,24 @@ const avatars = [avatar1, avatar2, avatar3];
 
 export const metrics = ['Metric 1', 'Metric 2', 'Metric 3'];
 
-export const maintenanceHistory: MaintenanceEvent[] = range(5).map((i) => ({
-  id: i,
-  date: sub(new Date(), { weeks: i + 1 }),
-  status: Math.random() > 0.5 ? 'Completed' : 'Irrelevant',
-  reportedAt: sub(new Date(), { weeks: i + 1 }),
-  flaggedMetrics:
-    Math.random() > 0.5
-      ? (sampleSize(metrics, 2) as string[])
-      : ([sample(metrics)] as string[]),
-  technician: {
-    avatar: sample(avatars),
-    name: 'John Doe',
-    phone: '+1 (555) 555-5555',
-  },
-}));
+export const maintenanceHistory: MaintenanceEvent[] = range(5).map((i) => {
+  const status = Math.random() > 0.5 ? 'Completed' : 'Irrelevant';
+
+  return {
+    id: i,
+    date: sub(new Date(), { weeks: i + 1 }),
+    status,
+    reportedAt: sub(new Date(), { weeks: i + 1 }),
+    flaggedMetrics:
+      status === 'Irrelevant'
+        ? []
+        : Math.random() > 0.5
+        ? (sampleSize(metrics, 2) as string[])
+        : ([sample(metrics)] as string[]),
+    technician: {
+      avatar: sample(avatars),
+      name: 'John Doe',
+      phone: '+1 (555) 555-5555',
+    },
+  };
+});

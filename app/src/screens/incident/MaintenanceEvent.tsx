@@ -49,7 +49,7 @@ export default function MaintentenanceEvent({ event }: Props) {
                   />
 
                   <Text variant="body" color="textMutedLight">
-                    Invalid prediction
+                    Unnecessary visit
                   </Text>
                 </>
               )}
@@ -62,7 +62,7 @@ export default function MaintentenanceEvent({ event }: Props) {
                   />
 
                   <Text variant="body" color="textMutedLight">
-                    Confirmed prediction
+                    Service visit
                   </Text>
                 </>
               )}
@@ -96,24 +96,26 @@ export default function MaintentenanceEvent({ event }: Props) {
                 </ContactButton>
               </Stack>
 
-              <Stack axis="x" space="1" align="center">
-                <Text variant="bodySmall" color="textMuted">
-                  Flagged metrics:
-                </Text>
+              {event.flaggedMetrics.length > 0 && (
+                <Stack axis="x" space="1" align="center">
+                  <Text variant="bodySmall" color="textMuted">
+                    Flagged metrics:
+                  </Text>
 
-                {event.flaggedMetrics.map((metric) => (
-                  <FlaggedMetric key={metric}>
-                    <Stack axis="x" space="1" align="center">
-                      <McIcon
-                        name="chart-timeline-variant"
-                        size={12}
-                        color={theme.colors.text.value}
-                      />
-                      <Text variant="bodyExtraSmall">{metric}</Text>
-                    </Stack>
-                  </FlaggedMetric>
-                ))}
-              </Stack>
+                  {event.flaggedMetrics.map((metric) => (
+                    <FlaggedMetric key={metric}>
+                      <Stack axis="x" space="1" align="center">
+                        <McIcon
+                          name="chart-timeline-variant"
+                          size={12}
+                          color={theme.colors.text.value}
+                        />
+                        <Text variant="bodyExtraSmall">{metric}</Text>
+                      </Stack>
+                    </FlaggedMetric>
+                  ))}
+                </Stack>
+              )}
             </Stack>
           </Body>
         </Collapsible>
