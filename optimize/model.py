@@ -138,13 +138,25 @@ def run(
         LOGGER.info(analysis.best_result)
         print("best config: ", json.dumps(best_config, indent=2, sort_keys=True))
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=3)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.1, random_state=3)
     # keep same order
     data = x_train, y_train, x_test, y_test
     # is_test doesn't return labels
     test_data, case_id = get_test_data(test_data_path)
     predictions = xgboost.predict(best_config, data, test_data)
-    pred_labels = conver_probs_to_label(predictions)
+
+    # model = xgb.XGBClassifier(**best_config, random_state=1, use_label_encoder=False)
+    # model.fit(
+    #     x_train,
+    #     y_train,
+    #     eval_set=[(x_test, y_test)],
+    #     eval_metric=best_config.get("eval_metric"),
+    #     verbose=False,
+    # )
+    # preds = model.predict_proba(test_data)
+
+    # pred_labels = conver_probs_to_label(preds[:, 1], 0.5)
+    pred_labels = conver_probs_to_label(predictions, 0.5)
 
     test_data["feedback"] = pred_labels
     test_data["case_id"] = case_id
@@ -154,4 +166,6 @@ def run(
     test_data[["case_id", "action_recommendation_id", "feedback"]].to_csv(
         "submission.csv", index=False
     )
+
+    print(test_data.groupby("feedback").count())
 
